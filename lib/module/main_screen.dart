@@ -1,4 +1,5 @@
 
+import 'package:e_commers_app/module/edit_profile_screen.dart';
 import 'package:e_commers_app/module/home_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -28,7 +29,7 @@ class _MainScreenState extends State<MainScreen> {
         HomeScreen(),
         Center(child: Text('Wishlist Page')),
         Center(child: Text('Order Page')),
-        Center(child: Text('Account Page')),
+        EditProfileScreen(),
       ],
     );
   }
@@ -70,7 +71,7 @@ class _MainScreenState extends State<MainScreen> {
         BottomNavigationBarItem(
           icon: CircleAvatar(
             radius: 12,
-            backgroundImage: AssetImage('images/profile.jpg'),
+            backgroundImage: AssetImage('images/profile.png'),
           ),
           label: 'ACCOUNT',
         ),
