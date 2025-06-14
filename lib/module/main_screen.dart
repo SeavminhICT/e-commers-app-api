@@ -1,6 +1,7 @@
 
 import 'package:e_commers_app/module/edit_profile_screen.dart';
 import 'package:e_commers_app/module/home_screen.dart';
+import 'package:e_commers_app/module/test.dart';
 import 'package:flutter/material.dart';
 
 class MainScreen extends StatefulWidget {
@@ -27,7 +28,7 @@ class _MainScreenState extends State<MainScreen> {
       index: _currentIndex,
       children: const [
         HomeScreen(),
-        Center(child: Text('Wishlist Page')),
+        Test(),
         Center(child: Text('Order Page')),
         EditProfileScreen(),
       ],
