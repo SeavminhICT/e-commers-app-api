@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:e_commers_app/data/model/provider/api_provider.dart';
 import 'package:e_commers_app/module/home_screen.dart';
+import 'package:e_commers_app/module/main_screen.dart';
 import 'package:e_commers_app/service/storage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -24,7 +25,7 @@ class LoginController extends GetxController {
         Map<String, dynamic> user = response.data['user'];
         StorageService.write(key: 'user', value: jsonEncode(user));
         // go to dashboard or home view
-        Get.offAll(() => HomeScreen());
+        Get.offAll(() => MainScreen());
       } else {
         Get.defaultDialog(
           title: "Error",
