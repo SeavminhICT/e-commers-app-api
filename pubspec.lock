@@ -146,7 +146,6 @@ packages:
       sha256: e3641ec5d63ebf0d9b41bd43201a66e3fc79a65db5f61fc181f04cd27aab950c
       url: "https://pub.dev"
     source: hosted
-<<<<<<< HEAD
     version: "1.15.0"
   nested:
     dependency: transitive
@@ -156,9 +155,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
-=======
     version: "1.16.0"
->>>>>>> 333f9daf014c7e3e6c96e9bf0a3d2d749c4901e5
   path:
     dependency: transitive
     description:
@@ -166,7 +163,6 @@ packages:
       sha256: "75cca69d1490965be98c73ceaea117e8a04dd21217b37b292c9ddbec0d955bc5"
       url: "https://pub.dev"
     source: hosted
-<<<<<<< HEAD
     version: "1.9.0"
   provider:
     dependency: "direct main"
@@ -176,9 +172,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.1.5"
-=======
     version: "1.9.1"
->>>>>>> 333f9daf014c7e3e6c96e9bf0a3d2d749c4901e5
   sky_engine:
     dependency: transitive
     description: flutter
