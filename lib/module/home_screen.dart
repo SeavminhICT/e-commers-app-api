@@ -22,6 +22,9 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
       actions: [
+        // CircleAvatar(
+        //   child: Text(${"Homercontroller.cuurre"}),
+        // ),
         IconButton(
           icon: Image.asset(
             'images/notification_icon.png',
