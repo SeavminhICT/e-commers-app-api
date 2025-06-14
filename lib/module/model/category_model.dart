@@ -1,45 +1,66 @@
-// To parse this JSON data, do
-//
-//     final categoryModel = categoryModelFromJson(jsonString);
-
 import 'dart:convert';
 
-List<CategoryModel> categoryModelFromJson(String str) => List<CategoryModel>.from(json.decode(str).map((x) => CategoryModel.fromJson(x)));
-
-String categoryModelToJson(List<CategoryModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+CategoryModel categoryModelFromJson(String str) =>
+    CategoryModel.fromJson(json.decode(str));
+String categoryModelToJson(CategoryModel data) => json.encode(data.toJson());
 
 class CategoryModel {
-    int id;
-    String name;
-    String slug;
-    String image;
-    DateTime creationAt;
-    DateTime updatedAt;
+  bool success;
+  String message;
+  List<Category_main> categories;
 
-    CategoryModel({
-        required this.id,
-        required this.name,
-        required this.slug,
-        required this.image,
-        required this.creationAt,
-        required this.updatedAt,
-    });
+  CategoryModel({
+    required this.success,
+    required this.message,
+    required this.categories,
+  });
 
-    factory CategoryModel.fromJson(Map<String, dynamic> json) => CategoryModel(
+  factory CategoryModel.fromJson(Map<String, dynamic> json) => CategoryModel(
+        success: json["Success"],
+        message: json["message"],
+        categories: List<Category_main>.from(
+            json["categories"].map((x) => Category_main.fromJson(x))),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "Success": success,
+        "message": message,
+        "categories": List<dynamic>.from(categories.map((x) => x.toJson())),
+      };
+}
+
+class Category_main {
+  int id;
+  String name;
+  dynamic description;
+  String image;
+  DateTime createdAt;
+  DateTime updatedAt;
+
+  Category_main({
+    required this.id,
+    required this.name,
+    this.description,
+    required this.image,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  factory Category_main.fromJson(Map<String, dynamic> json) => Category_main(
         id: json["id"],
         name: json["name"],
-        slug: json["slug"],
+        description: json["description"],
         image: json["image"],
-        creationAt: DateTime.parse(json["creationAt"]),
-        updatedAt: DateTime.parse(json["updatedAt"]),
-    );
+        createdAt: DateTime.parse(json["created_at"]),
+        updatedAt: DateTime.parse(json["updated_at"]),
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "id": id,
         "name": name,
-        "slug": slug,
+        "description": description,
         "image": image,
-        "creationAt": creationAt.toIso8601String(),
-        "updatedAt": updatedAt.toIso8601String(),
-    };
+        "created_at": createdAt.toIso8601String(),
+        "updated_at": updatedAt.toIso8601String(),
+      };
 }

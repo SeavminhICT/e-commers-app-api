@@ -1,4 +1,4 @@
-
+import 'package:e_commers_app/module/edit_profile_screen.dart';
 import 'package:e_commers_app/module/home_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -15,7 +15,6 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       body: _buildBody(),
       bottomNavigationBar: _buildNavigationBar(),
     );
@@ -28,7 +27,7 @@ class _MainScreenState extends State<MainScreen> {
         HomeScreen(),
         Center(child: Text('Order Page')),
         Center(child: Text('Order Page')),
-        Center(child: Text('Account Page')),
+        EditProfileScreen(),
       ],
     );
   }
@@ -38,7 +37,6 @@ class _MainScreenState extends State<MainScreen> {
       currentIndex: _currentIndex,
       type: BottomNavigationBarType.fixed,
       backgroundColor: Colors.white,
-
       selectedItemColor: Colors.blue,
       unselectedItemColor: Colors.black,
       selectedLabelStyle: const TextStyle(
@@ -70,7 +68,7 @@ class _MainScreenState extends State<MainScreen> {
         BottomNavigationBarItem(
           icon: CircleAvatar(
             radius: 12,
-            backgroundImage: AssetImage('images/profile.jpg'),
+            backgroundImage: AssetImage('images/profile.png'),
           ),
           label: 'ACCOUNT',
         ),
