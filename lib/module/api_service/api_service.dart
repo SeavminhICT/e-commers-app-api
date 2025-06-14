@@ -1,24 +1,26 @@
-
 import 'dart:convert';
-
-import 'package:e_commers_app/module/model/image_banners_model.dart';
-import 'package:flutter/foundation.dart';
+import 'package:e_commers_app/module/model/category_model.dart';
+import 'package:e_commers_app/module/model/product_model.dart';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  Future<List<ProductModel>> getProductList() async {
-    try {
-      final url = "https://api.escuelajs.co/api/v1/products";
-      http.Response res = await http.get(Uri.parse(url));
-      if (res.statusCode == 200) {
-        return compute(productModelFromJson, res.body);
-      } else {
-        throw Exception("Error code: ${res.statusCode}");
-      }
-    } catch (e) {
-      throw Exception("Network error: $e");
+  final String baseUrl = 'http://10.0.2.2:8000/api'; // Android emulator
+
+  Future<CategoryModel> getCategoryList() async {
+    final response = await http.get(Uri.parse('$baseUrl/categories'));
+    if (response.statusCode == 200) {
+      return categoryModelFromJson(response.body);
+    } else {
+      throw Exception('Failed to load categories');
     }
   }
 
-
+  Future<ProductsModel> getProductsList() async {
+    final response = await http.get(Uri.parse('$baseUrl/products'));
+    if (response.statusCode == 200) {
+      return productsModelFromJson(response.body);
+    } else {
+      throw Exception('Failed to load products');
+    }
+  }
 }
