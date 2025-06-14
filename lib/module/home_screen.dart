@@ -277,7 +277,6 @@ class _HomeScreenState extends State<HomeScreen> {
       return const Center(child: Text('No products found.'));
     }
 
-
     return Container(
       color: Colors.white,
       child: Column(
@@ -311,7 +310,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 final imageUrl = fixUrl(category.image);
                 return GestureDetector(
-
                   // onTap: () {
                   //   final productsInCategory = getProductsByCategory
                   //       .where((product) => product.category== category.id)
