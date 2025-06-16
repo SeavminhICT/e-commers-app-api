@@ -1,6 +1,8 @@
 
+
 import 'package:e_commers_app/module/home_screen.dart';
-import 'package:e_commers_app/module/test.dart';
+import 'package:e_commers_app/module/myorder_screen.dart';
+import 'package:e_commers_app/module/favorite_screen.dart';
 import 'package:flutter/material.dart';
 
 class MainScreen extends StatefulWidget {
@@ -11,7 +13,7 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int _currentIndex = 0;
+  int _currentIndex = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -27,9 +29,8 @@ class _MainScreenState extends State<MainScreen> {
       index: _currentIndex,
       children: const [
         HomeScreen(),
-        Test(),
-        Center(child: Text('Order Page')),
-        Center(child: Text('Account Page')),
+        MyOrderScreen(),
+        MyFavScreen(),
       ],
     );
   }
@@ -60,18 +61,19 @@ class _MainScreenState extends State<MainScreen> {
           icon: ImageIcon(AssetImage('images/Home_icon.png')),
           label: 'HOME',
         ),
+         BottomNavigationBarItem(
+          icon: ImageIcon(AssetImage('images/order_icon.png')),
+          label: 'MYORDER',
+        ),
         BottomNavigationBarItem(
           icon: ImageIcon(AssetImage('images/wishlist_icon.png')),
-          label: 'WISHLIST',
+          label: 'FAVORITE',
         ),
-        BottomNavigationBarItem(
-          icon: ImageIcon(AssetImage('images/order_icon.png')),
-          label: 'ORDER',
-        ),
+       
         BottomNavigationBarItem(
           icon: CircleAvatar(
             radius: 12,
-            backgroundImage: AssetImage('images/profile.jpg'),
+            backgroundImage: AssetImage('images/profile.png'),
           ),
           label: 'ACCOUNT',
         ),
