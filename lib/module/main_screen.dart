@@ -1,5 +1,4 @@
-
-import 'package:e_commers_app/module/edit_profile_screen.dart';
+import 'package:e_commers_app/module/account_screen.dart';
 import 'package:e_commers_app/module/home_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -29,7 +28,7 @@ class _MainScreenState extends State<MainScreen> {
         HomeScreen(),
         Center(child: Text('Wishlist Page')),
         Center(child: Text('Order Page')),
-        EditProfileScreen(),
+        AccountScreen(username: 'YourUsername', emailOrPhone: 'your@email.com'),
       ],
     );
   }

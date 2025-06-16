@@ -39,16 +39,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           color: Colors.black,
         ),
       ),
-      actions: [
-        IconButton(
-          icon: const Icon(Icons.settings, color: Colors.black),
-          onPressed: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => const SettingsScreen()),
-            );
-          },
-        ),
-      ],
     );
   }
 
