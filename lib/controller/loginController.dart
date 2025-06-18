@@ -3,20 +3,21 @@ import 'dart:convert';
 import 'package:e_commers_app/data/model/provider/api_provider.dart';
 import 'package:e_commers_app/module/home_screen.dart';
 import 'package:e_commers_app/module/main_screen.dart';
+import 'package:e_commers_app/module/model/product_model_test.dart';
 import 'package:e_commers_app/service/storage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class LoginController extends GetxController {
-  //TODO: Implement LoginController
   final emailcontroller = TextEditingController();
   final passwordcontroller = TextEditingController();
-  // final emailController = TextEditingController(text: "admin@gmail.com");
-  // final passwordController = TextEditingController(text: "123123");
 
   final _provider = Get.find<ApiProvider>();
+  var isLoading = false.obs; // 👈 Add this line
 
   void login({required String email, required String password}) async {
+    isLoading.value = true; // 👈 Start loading
+
     try {
       final response = await _provider.login(email: email, password: password);
       if (response.statusCode == 200) {
@@ -24,7 +25,7 @@ class LoginController extends GetxController {
         StorageService.write(key: 'token', value: token);
         Map<String, dynamic> user = response.data['user'];
         StorageService.write(key: 'user', value: jsonEncode(user));
-        // go to dashboard or home view
+
         Get.offAll(() => MainScreen());
       } else {
         Get.defaultDialog(
@@ -34,6 +35,10 @@ class LoginController extends GetxController {
       }
     } catch (e) {
       Get.defaultDialog(title: "Error", content: Text(e.toString()));
+    } finally {
+      isLoading.value = false; // 👈 Stop loading
     }
   }
+
+  List<ProductModel> favoriteProducts = [];
 }
