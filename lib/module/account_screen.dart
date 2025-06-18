@@ -5,12 +5,14 @@ class AccountScreen extends StatelessWidget {
   final String username;
   final String emailOrPhone;
   final String linkedAccount;
+  final String? profileImage;
 
   const AccountScreen({
     super.key,
     required this.username,
     required this.emailOrPhone,
     this.linkedAccount = 'Google',
+    this.profileImage,
   });
 
   @override
@@ -27,12 +29,6 @@ class AccountScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       elevation: 2,
       centerTitle: true,
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back, color: Colors.deepPurple),
-        onPressed: () {
-          Navigator.of(context).pop();
-        },
-      ),
       title: const Text(
         'Account',
         style: TextStyle(
@@ -72,7 +68,9 @@ class AccountScreen extends StatelessWidget {
             ),
             child: CircleAvatar(
               radius: 52,
-              backgroundImage: AssetImage('images/profile.png'),
+              backgroundImage: profileImage != null
+                  ? NetworkImage(profileImage!)
+                  : AssetImage('images/profile.png'),
             ),
           ),
         ),

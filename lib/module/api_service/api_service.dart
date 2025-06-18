@@ -8,7 +8,7 @@ class ApiService {
   final String baseUrl = 'http://10.0.2.2:8000/api'; 
 
   Future<CategoryModel> getCategoryList() async {
-    final response = await http.get(Uri.parse('$kBaseUrl/categories'));
+    final response = await http.get(Uri.parse('$baseUrl/categories'));
     if (response.statusCode == 200) {
       return categoryModelFromJson(response.body);
     } else {
@@ -17,11 +17,13 @@ class ApiService {
   }
 
   Future<ProductsModel> getProductsList() async {
-    final response = await http.get(Uri.parse('$kBaseUrl/products'));
+    final response = await http.get(Uri.parse('$baseUrl/products'));
     if (response.statusCode == 200) {
       return productsModelFromJson(response.body);
     } else {
       throw Exception('Failed to load products');
     }
   }
+
+
 }
