@@ -15,7 +15,6 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       body: _buildBody(),
       bottomNavigationBar: _buildNavigationBar(),
     );
@@ -26,7 +25,7 @@ class _MainScreenState extends State<MainScreen> {
       index: _currentIndex,
       children: const [
         HomeScreen(),
-        Center(child: Text('Wishlist Page')),
+        Center(child: Text('Order Page')),
         Center(child: Text('Order Page')),
         AccountScreen(username: 'YourUsername', emailOrPhone: 'your@email.com'),
       ],
@@ -38,7 +37,6 @@ class _MainScreenState extends State<MainScreen> {
       currentIndex: _currentIndex,
       type: BottomNavigationBarType.fixed,
       backgroundColor: Colors.white,
-
       selectedItemColor: Colors.blue,
       unselectedItemColor: Colors.black,
       selectedLabelStyle: const TextStyle(

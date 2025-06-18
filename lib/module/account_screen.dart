@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'settings_screen.dart';
-import 'edit_profile_screen.dart';
 
 class AccountScreen extends StatelessWidget {
   final String username;

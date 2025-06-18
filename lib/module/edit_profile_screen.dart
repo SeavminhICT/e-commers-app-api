@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'settings_screen.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
