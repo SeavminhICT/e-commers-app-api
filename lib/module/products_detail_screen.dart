@@ -1,4 +1,6 @@
 import 'package:e_commers_app/module/model/products_detail_model.dart';
+import 'package:e_commers_app/module/myFavScreen.dart';
+import 'package:e_commers_app/service/favorite_service.dart';
 import 'package:flutter/material.dart';
 
 class ProductsDetailScreen extends StatefulWidget {
@@ -14,6 +16,8 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
   int selectedSize = 0;
   final List<int> availableSizes = [8, 10, 38, 40];
 
+  // List<ProductsDetailModel> favoriteProducts = [];
+
   String fixUrl(String url) {
     if (url.startsWith('https://')) {
       return url.replaceFirst('https://', 'http://');
@@ -24,6 +28,13 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
   bool isFavorited = false;
 
   @override
+  void initState() {
+    super.initState();
+    isFavorited = favoriteProducts.any(
+      (item) => item.productId == widget.product.productId,
+    );
+  }
+
   Widget build(BuildContext context) {
     final product = widget.product;
     final imageUrl = fixUrl(product.productImageUrl);
@@ -67,6 +78,16 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
                     onTap: () {
                       setState(() {
                         isFavorited = !isFavorited;
+
+                        final detail =
+                            product; // assuming `product` is already a ProductsDetailModel
+
+                        if (isFavorited) {
+                          favoriteProducts.add(detail);
+                        } else {
+                          favoriteProducts.removeWhere(
+                              (item) => item.productId == detail.productId);
+                        }
                       });
                     },
                     child: Icon(

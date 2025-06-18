@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:e_commers_app/data/model/provider/api_provider.dart';
 import 'package:e_commers_app/module/home_screen.dart';
 import 'package:e_commers_app/module/main_screen.dart';
+import 'package:e_commers_app/module/model/product_model_test.dart';
 import 'package:e_commers_app/service/storage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -38,4 +39,6 @@ class LoginController extends GetxController {
       isLoading.value = false; // 👈 Stop loading
     }
   }
+
+  List<ProductModel> favoriteProducts = [];
 }

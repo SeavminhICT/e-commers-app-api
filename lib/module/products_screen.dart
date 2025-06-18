@@ -1,8 +1,6 @@
-import 'package:e_commers_app/constant/constants.dart';
 import 'package:e_commers_app/module/model/products_detail_model.dart';
 import 'package:e_commers_app/module/products_detail_screen.dart';
 import 'package:flutter/material.dart';
-import 'dart:convert';
 import 'model/product_model.dart';
 
 class ProductsScreen extends StatelessWidget {
@@ -74,7 +72,7 @@ class ProductsScreen extends StatelessWidget {
   }
 
   Widget _buildProductCard(Product product) {
-    final String imageUrl = fixUrl("${kUrl}" + product.image);
+    final String imageUrl = fixUrl(product.image);
     return Container(
       decoration: BoxDecoration(
         border: Border.all(color: Colors.blue.shade200, width: 1),
@@ -89,7 +87,7 @@ class ProductsScreen extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius:
-                    const BorderRadius.vertical(top: Radius.circular(12)),
+                const BorderRadius.vertical(top: Radius.circular(12)),
                 child: Image.network(
                   imageUrl,
                   height: 170,
