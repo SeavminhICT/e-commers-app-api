@@ -12,6 +12,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,6 +27,7 @@ class _MainScreenState extends State<MainScreen> {
       children: const [
         HomeScreen(),
         Center(child: Text('Order Page')),
+        
         Center(child: Text('Order Page')),
         EditProfileScreen(),
       ],
