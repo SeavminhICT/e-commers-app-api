@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'settings_screen.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -39,16 +38,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           color: Colors.black,
         ),
       ),
-      actions: [
-        IconButton(
-          icon: const Icon(Icons.settings, color: Colors.black),
-          onPressed: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => const SettingsScreen()),
-            );
-          },
-        ),
-      ],
     );
   }
 
