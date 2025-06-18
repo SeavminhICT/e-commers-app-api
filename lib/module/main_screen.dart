@@ -1,5 +1,8 @@
+import 'package:e_commers_app/module/edit_profile_screen.dart';
+import 'package:e_commers_app/module/favorite_screen.dart';
 import 'package:e_commers_app/module/account_screen.dart';
 import 'package:e_commers_app/module/home_screen.dart';
+import 'package:e_commers_app/module/myorder_screen.dart';
 import 'package:flutter/material.dart';
 
 class MainScreen extends StatefulWidget {
@@ -26,6 +29,10 @@ class _MainScreenState extends State<MainScreen> {
       index: _currentIndex,
       children: const [
         HomeScreen(),
+        MyOrderScreen(),
+        MyFavScreen(),
+        EditProfileScreen(),
+        
         Center(child: Text('Order Page')),
         
         Center(child: Text('Order Page')),
@@ -59,14 +66,15 @@ class _MainScreenState extends State<MainScreen> {
           icon: ImageIcon(AssetImage('images/Home_icon.png')),
           label: 'HOME',
         ),
+         BottomNavigationBarItem(
+          icon: ImageIcon(AssetImage('images/order_icon.png')),
+          label: 'MYORDER',
+        ),
         BottomNavigationBarItem(
           icon: ImageIcon(AssetImage('images/wishlist_icon.png')),
-          label: 'WISHLIST',
+          label: 'FAVORITE',
         ),
-        BottomNavigationBarItem(
-          icon: ImageIcon(AssetImage('images/order_icon.png')),
-          label: 'ORDER',
-        ),
+       
         BottomNavigationBarItem(
           icon: CircleAvatar(
             radius: 12,

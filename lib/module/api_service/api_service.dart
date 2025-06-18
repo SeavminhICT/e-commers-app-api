@@ -16,6 +16,7 @@ class ApiService {
     }
   }
 
+
   Future<ProductsModel> getProductsList() async {
     final response = await http.get(Uri.parse('$kBaseUrl/products'));
     if (response.statusCode == 200) {
@@ -24,4 +25,5 @@ class ApiService {
       throw Exception('Failed to load products');
     }
   }
+
 }

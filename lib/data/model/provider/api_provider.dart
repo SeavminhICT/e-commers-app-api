@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:e_commers_app/constant/constants.dart';
+import 'package:e_commers_app/service/storage_service.dart';
 
 class ApiProvider {
   final _dio = Dio(
@@ -49,6 +50,50 @@ class ApiProvider {
       });
 
       return await _dio.post("/login", data: _formData);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Response> getCartProducts() async {
+    try {
+      return await _dio.get(
+        "/viewCart",
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization':
+            'Bearer ${await StorageService.read(key: 'token')}',
+          },
+        ),
+      );
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Response> addToCart(
+      {required int productId,
+        required int quantity,
+        required num price}) async {
+    try {
+      return await _dio.post(
+        '/cart',
+        data: {
+          'product_id': productId,
+          'quantity': quantity,
+          'price': price,
+        },
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization':
+            'Bearer ${await StorageService.read(key: 'token')}',
+          },
+        ),
+      );
     } catch (e) {
       rethrow;
     }
