@@ -30,7 +30,7 @@ class ApiService {
     required int productId,
     required int quantity,
     required String authToken,
-    required double price
+    required double price, 
   }) async {
     final url = Uri.parse('$kBaseUrl/cart');
     final response = await http.post(
@@ -42,16 +42,13 @@ class ApiService {
       body: jsonEncode({
         'product_id': productId,
         'quantity': quantity,
-        'price' : price,
+        'price': price, 
       }),
     );
 
     if (response.statusCode == 200) {
       return true;
     } else {
-      print('Add to cart failed');
-      print('Status code: ${response.statusCode}');
-      print('Response body: ${response.body}');
       return false;
     }
   }
