@@ -27,12 +27,6 @@ class AccountScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       elevation: 2,
       centerTitle: true,
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back, color: Colors.deepPurple),
-        onPressed: () {
-          Navigator.of(context).pop();
-        },
-      ),
       title: const Text(
         'Account',
         style: TextStyle(
