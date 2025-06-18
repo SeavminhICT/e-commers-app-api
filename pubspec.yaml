@@ -35,9 +35,46 @@ dependencies:
   
 
 
-  # The following adds the Cupertino Icons font to your application.
+  # The following adds the Cupertino Icons fonts to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
+  dio: ^5.7.0
+  flutter_secure_storage: ^9.2.2
+  google_fonts: ^6.2.1
+  carousel_slider: ^5.0.0
+  sqflite: ^2.4.1
+  path: ^1.9.0
+  badges: ^3.1.2
+  modal_bottom_sheet: ^3.0.0
+
+  #  push notification
+  firebase_core: ^2.32.0
+  firebase_messaging: ^14.7.10
+  awesome_notifications: ^0.10.0
+  smooth_page_indicator: ^1.2.0+3
+
+  connectivity_plus: ^6.0.2 # check internet connection
+  cached_network_image: ^3.3.1 # cache image
+  skeletonizer: ^1.1.2+1
+  animated_splash_screen: ^1.3.0
+  vibration: ^2.0.1
+  gradient_borders: ^1.0.1
+  timeago: ^3.7.0
+  haptic_feedback: ^0.5.1+1
+  firebase_analytics: ^10.10.7
+  logger: ^2.4.0
+  faker: ^2.2.0
+  google_maps_flutter: ^2.10.0
+  #  geolocator: ^13.0.2
+  #  geocoding: ^3.0.0
+  permission_handler: ^11.3.1
+  flutter_slidable: ^3.1.1
+  flutter_onboarding_slider: ^1.0.11
+  shared_preferences: ^2.5.3
+  change_app_package_name: ^1.4.0
+  image_picker: ^1.1.2
+  get: ^4.7.2
+#  rive: ^0.13.20
   http: ^1.3.0
 transformer_page_view: ^0.1.6
 
@@ -58,7 +95,7 @@ dev_dependencies:
 # The following section is specific to Flutter packages.
 flutter:
 
-  # The following line ensures that the Material Icons font is
+  # The following line ensures that the Material Icons fonts is
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
@@ -78,15 +115,14 @@ flutter:
 
   # To add custom fonts to your application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a
-  # "family" key with the font family name, and a "fonts" key with a
-  # list giving the asset and other descriptors for the font. For
+  # "family" key with the fonts family name, and a "fonts" key with a
+  # list giving the asset and other descriptors for the fonts. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
+fonts:
+     - family: Khmer
+       fonts:
+         - asset: fonts/KantumruyPro-Bold.ttf
+         - asset: fonts/Roboto-Bold-Italic.ttf
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf

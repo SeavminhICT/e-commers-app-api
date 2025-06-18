@@ -1,7 +1,7 @@
-import 'package:e_commers_app/module/model/fav_noti_screen.dart';
+import 'package:e_commers_app/module/fav_noti_screen.dart';
+import 'package:e_commers_app/module/model/productfav_model.dart';
 import 'package:flutter/material.dart';
 import 'package:e_commers_app/module/api_service/api_fav.dart';
-import 'package:e_commers_app/module/model/productfav.dart';
 class MyFavScreen extends StatefulWidget {
   const MyFavScreen({Key? key}) : super(key: key);
 
@@ -186,27 +186,32 @@ Widget build(BuildContext context) {
             ),
           ),
           Expanded(
-            child: TextField(
-              controller: _searchController,
-              decoration: const InputDecoration(
-                hintText: 'Search something...',
-                hintStyle: TextStyle(color: Colors.grey),
-                border: InputBorder.none,
-              ),
-              onSubmitted: (value) {
-                setState(() {
-                  filteredProducts = products.where((product) =>
-                    product.title.toLowerCase().contains(value.toLowerCase()) ||
-                    product.category.toLowerCase().contains(value.toLowerCase())
-                  ).toList();
-                  // Maintain current sort after filtering
-                  if (currentSort != null) {
-                    _sortProducts(currentSort!);
-                  }
-                });
-              },
-            ),
-          ),
+  child: TextField(
+    controller: _searchController,
+    decoration: const InputDecoration(
+      hintText: 'Search something...',
+      hintStyle: TextStyle(color: Colors.grey),
+      border: InputBorder.none,
+    ),
+    onChanged: (value) {
+      setState(() {
+        if (value.isEmpty) {
+          filteredProducts = List.from(products);
+        } else {
+          filteredProducts = products.where((product) =>
+            product.title.toLowerCase().contains(value.toLowerCase()) ||
+            product.category.toLowerCase().contains(value.toLowerCase())
+          ).toList();
+        }
+        // Maintain current sort after filtering
+        if (currentSort != null) {
+          _sortProducts(currentSort!);
+        }
+      });
+    },
+  ),
+),
+
           PopupMenuButton<SortOption>(
             icon: Icon(Icons.tune, color: Colors.grey[600]),
             onSelected: _sortProducts,

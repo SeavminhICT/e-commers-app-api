@@ -12,7 +12,7 @@ class MyOrderScreen extends StatefulWidget {
 
 class _MyOrderScreenState extends State<MyOrderScreen> {
   int selectedTab = 0;
-  late Future<List<ProductModel>> _futureOrders;
+  late Future<List<ProductModel>> _futureOrders; // Fixed type
 
   @override
   void initState() {
@@ -20,7 +20,7 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
     _futureOrders = fetchOrders();
   }
 
-  Future<List<ProductModel>> fetchOrders() async {
+  Future<List<ProductModel>> fetchOrders() async { // Fixed type
     final api = ApiMyorder();
     final response = await api.getProductsmyorder();
     return response;
@@ -30,37 +30,35 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-  Container(
-    color: Colors.white,
-    padding: const EdgeInsets.only(top: 40, bottom: 16),
-    child: Padding(
-  padding: const EdgeInsets.symmetric(horizontal: 16),
-  child: Stack(
-    alignment: Alignment.center,
-    children: [
-      const Center(
-        child: Text(
-          'My Order',
-          style: TextStyle(
-            fontWeight: FontWeight.w600,
-            fontSize: 18,
-            color: Colors.black,
+        Container(
+          color: Colors.white,
+          padding: const EdgeInsets.only(top: 40, bottom: 16),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                const Center(
+                  child: Text(
+                    'My Order',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 18,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+                Positioned(
+                  right: 0,
+                  child: Image.asset(
+                    'images/shopping_icon.png',
+                    width: 24,
+                    height: 24,
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-      ),
-      Positioned(
-        right: 0,
-        child: Image.asset(
-          'images/shopping_icon.png', 
-          width: 24,
-          height: 24,
-        ),
-      ),
-    ],
-  ),
-),
-
-
         ),
         Container(
           color: Colors.white,
@@ -72,7 +70,7 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
           ),
         ),
         Expanded(
-          child: FutureBuilder<List<ProductModel>>(
+          child: FutureBuilder<List<ProductModel>>( // Fixed type
             future: _futureOrders,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -83,12 +81,13 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
                 return const Center(child: Text('No orders found.'));
               }
 
-              final orders = snapshot.data!;
+              final allProducts = snapshot.data!;
+
               return ListView.builder(
                 padding: const EdgeInsets.all(16),
-                itemCount: orders.length,
+                itemCount: allProducts.length,
                 itemBuilder: (context, index) {
-                  final product = orders[index];
+                  final product = allProducts[index];
                   return selectedTab == 0
                       ? OrderCard(product: product)
                       : HistoryCard(product: product);
@@ -131,7 +130,7 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
 }
 
 class OrderCard extends StatelessWidget {
-  final ProductModel product;
+  final ProductModel product; // Fixed type
 
   const OrderCard({Key? key, required this.product}) : super(key: key);
 
@@ -182,7 +181,7 @@ class OrderCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      product.title,
+                      product.title, // Fixed field
                       style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
@@ -193,11 +192,13 @@ class OrderCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      product.category,
+                      product.description, // Fixed field
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.grey[600],
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 4),
                     Text(
@@ -230,7 +231,7 @@ class OrderCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    '\$${product.price.toStringAsFixed(2)}',
+                    '\$${product.price}',
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -295,7 +296,7 @@ class OrderCard extends StatelessWidget {
 }
 
 class HistoryCard extends StatelessWidget {
-  final ProductModel product;
+  final ProductModel product; // Fixed type
 
   const HistoryCard({Key? key, required this.product}) : super(key: key);
 
@@ -347,7 +348,7 @@ class HistoryCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      product.title,
+                      product.title, // Fixed field
                       style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
@@ -396,7 +397,7 @@ class HistoryCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    "\$${product.price.toStringAsFixed(2)}",
+                    "\$${product.price}",
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,

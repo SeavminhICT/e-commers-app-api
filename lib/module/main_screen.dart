@@ -1,8 +1,7 @@
-
-
+import 'package:e_commers_app/module/edit_profile_screen.dart';
+import 'package:e_commers_app/module/favorite_screen.dart';
 import 'package:e_commers_app/module/home_screen.dart';
 import 'package:e_commers_app/module/myorder_screen.dart';
-import 'package:e_commers_app/module/favorite_screen.dart';
 import 'package:flutter/material.dart';
 
 class MainScreen extends StatefulWidget {
@@ -13,12 +12,11 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int _currentIndex = 1;
+  int _currentIndex = 2;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       body: _buildBody(),
       bottomNavigationBar: _buildNavigationBar(),
     );
@@ -31,6 +29,8 @@ class _MainScreenState extends State<MainScreen> {
         HomeScreen(),
         MyOrderScreen(),
         MyFavScreen(),
+        EditProfileScreen(),
+        
       ],
     );
   }
@@ -40,7 +40,6 @@ class _MainScreenState extends State<MainScreen> {
       currentIndex: _currentIndex,
       type: BottomNavigationBarType.fixed,
       backgroundColor: Colors.white,
-
       selectedItemColor: Colors.blue,
       unselectedItemColor: Colors.black,
       selectedLabelStyle: const TextStyle(
