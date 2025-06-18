@@ -140,7 +140,7 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 _build_search(),
                 buildAutoSlideShow(),
-                _buildCategory(allCategory, allProducts),
+                _buildCategory(allCategory, productsModel.categories),
                 const SizedBox(height: 16),
                 _buildMainProduct(allProducts),
               ],
@@ -269,12 +269,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildCategory(
-      List<Category_main> categories, List<Product> getProductsByCategory) {
+      List<Category_main> categories, List<Category> productCategories) {
     if (categories.isEmpty) {
       return const Center(child: Text('No categories found.'));
-    }
-    if (getProductsByCategory.isEmpty) {
-      return const Center(child: Text('No products found.'));
     }
 
     return Container(
@@ -291,10 +288,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   'Categories',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-                Text(
-                  'See All',
-                  style: TextStyle(color: Colors.blue),
-                ),
+                // Text(
+                //   'See All',
+                //   style: TextStyle(color: Colors.blue),
+                // ),
               ],
             ),
           ),
@@ -307,23 +304,24 @@ class _HomeScreenState extends State<HomeScreen> {
               itemCount: categories.length,
               itemBuilder: (context, index) {
                 final category = categories[index];
+                final int categoryId = category.id;
 
                 final imageUrl = fixUrl(category.image);
                 return GestureDetector(
-                  // onTap: () {
-                  //   final productsInCategory = getProductsByCategory
-                  //       .where((product) => product.category== category.id)
-                  //       .toList();
-
-                  //   Navigator.push(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //       builder: (_) => ProductsScreen(
-                  //         products: productsInCategory,
-                  //       ),
-                  //     ),
-                  //   );
-                  // },
+                  onTap: () {
+                    final categoryData = productCategories.firstWhere(
+                      (cat) => cat.id == categoryId,
+                      orElse: () => Category(id: 0, name: '', products: []),
+                    );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => ProductsScreen(
+                          products: categoryData.products,
+                        ),
+                      ),
+                    );
+                  },
                   child: Padding(
                     padding: const EdgeInsets.only(right: 25.0),
                     child: Column(

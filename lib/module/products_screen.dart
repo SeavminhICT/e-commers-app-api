@@ -1,3 +1,4 @@
+import 'package:e_commers_app/constant/constants.dart';
 import 'package:e_commers_app/module/model/products_detail_model.dart';
 import 'package:e_commers_app/module/products_detail_screen.dart';
 import 'package:flutter/material.dart';
@@ -73,7 +74,7 @@ class ProductsScreen extends StatelessWidget {
   }
 
   Widget _buildProductCard(Product product) {
-    final String imageUrl = fixUrl(product.image);
+    final String imageUrl = fixUrl("${kUrl}" + product.image);
     return Container(
       decoration: BoxDecoration(
         border: Border.all(color: Colors.blue.shade200, width: 1),

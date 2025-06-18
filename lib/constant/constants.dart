@@ -6,6 +6,9 @@ const kNOImgUrl =
 var kBaseUrl =
     "http://${GetPlatform.isAndroid ? "10.0.2.2:8000/api" : "localhost:8000/api"}";
 
+var kUrl =
+    "http://${GetPlatform.isAndroid ? "10.0.2.2" : "localhost"}:8000/storage";
+
 class UserModel {
   final int id;
   final String name;
