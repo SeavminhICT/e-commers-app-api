@@ -1,4 +1,8 @@
+import 'package:e_commers_app/module/api_service/api_service.dart';
 import 'package:e_commers_app/module/model/products_detail_model.dart';
+import 'package:e_commers_app/module/myFavScreen.dart';
+import 'package:e_commers_app/service/favorite_service.dart';
+import 'package:e_commers_app/service/storage_service.dart';
 import 'package:flutter/material.dart';
 
 class ProductsDetailScreen extends StatefulWidget {
@@ -14,6 +18,8 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
   int selectedSize = 0;
   final List<int> availableSizes = [8, 10, 38, 40];
 
+  // List<ProductsDetailModel> favoriteProducts = [];
+
   String fixUrl(String url) {
     if (url.startsWith('https://')) {
       return url.replaceFirst('https://', 'http://');
@@ -24,6 +30,13 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
   bool isFavorited = false;
 
   @override
+  void initState() {
+    super.initState();
+    isFavorited = favoriteProducts.any(
+      (item) => item.productId == widget.product.productId,
+    );
+  }
+
   Widget build(BuildContext context) {
     final product = widget.product;
     final imageUrl = fixUrl(product.productImageUrl);
@@ -67,6 +80,16 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
                     onTap: () {
                       setState(() {
                         isFavorited = !isFavorited;
+
+                        final detail =
+                            product; // assuming `product` is already a ProductsDetailModel
+
+                        if (isFavorited) {
+                          favoriteProducts.add(detail);
+                        } else {
+                          favoriteProducts.removeWhere(
+                              (item) => item.productId == detail.productId);
+                        }
                       });
                     },
                     child: Icon(
@@ -158,6 +181,8 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
                 ),
               ),
             ),
+
+            // Buy Now + Add to Cart
             Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -165,7 +190,9 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
                 children: [
                   Expanded(
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        // Future feature: handle "Buy Now"
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blue,
                         padding: const EdgeInsets.symmetric(vertical: 16),
@@ -182,9 +209,33 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
                   const SizedBox(width: 12),
                   Expanded(
                     child: ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
+                        final token = await StorageService.read(key: 'token');
+                        print(token);
+
+                        if (token == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text('You must login to add to cart')),
+                          );
+                          return;
+                        }
+                        final success = await ApiService.addToCart(
+                          productId: int.parse(widget.product.productId),
+                          quantity: 1,
+                          authToken: token,
+                          price: double.parse(
+                              product.productPrice.toString()), // if needed
+                        );
+
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Added to cart')),
+                          SnackBar(
+                            content: Text(
+                              success
+                                  ? 'Product added to cart'
+                                  : 'Failed to add to cart',
+                            ),
+                          ),
                         );
                       },
                       style: ElevatedButton.styleFrom(
@@ -200,7 +251,6 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 12),
                 ],
               ),
             ),
