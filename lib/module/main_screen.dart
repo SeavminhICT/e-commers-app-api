@@ -1,5 +1,6 @@
 import 'package:e_commers_app/module/edit_profile_screen.dart';
 import 'package:e_commers_app/module/favorite_screen.dart';
+import 'package:e_commers_app/module/account_screen.dart';
 import 'package:e_commers_app/module/home_screen.dart';
 import 'package:e_commers_app/module/myorder_screen.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,8 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int _currentIndex = 2;
+  int _currentIndex = 0;
+
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +33,10 @@ class _MainScreenState extends State<MainScreen> {
         MyFavScreen(),
         EditProfileScreen(),
         
+        Center(child: Text('Order Page')),
+        
+        Center(child: Text('Order Page')),
+        AccountScreen(username: 'YourUsername', emailOrPhone: 'your@email.com'),
       ],
     );
   }

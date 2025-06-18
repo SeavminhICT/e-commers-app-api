@@ -12,10 +12,8 @@ class _LanguageScreenState extends State<LanguageScreen> {
 
   final List<Map<String, String>> _languages = [
     {'name': 'English', 'flag': '🇬🇧'},
-    {'name': 'Bahasa Indonesia', 'flag': '🇮🇩'},
-    {'name': 'Chinese', 'flag': '🇨🇳'},
-    {'name': 'Deutsch', 'flag': '🇩🇪'},
     {'name': 'Khmer', 'flag': '🇰🇭'},
+    {'name': 'Chinese', 'flag': '🇨🇳'},
   ];
 
   @override

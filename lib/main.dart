@@ -7,15 +7,15 @@ void main() {
   runApp(const App());
 }
 
-// class App extends StatelessWidget {
-//   const App({super.key});
+class App extends StatelessWidget {
+  const App({super.key});
 
-//   // @override
-//   // Widget build(BuildContext context) {
-//   //   return GetMaterialApp(
-//   //     home: SplashScreen(),
-//   //     debugShowCheckedModeBanner: false,
-//   //     initialBinding: APIBinding(), // Now valid
-//   //   );
-//   // }
-// }
+  @override
+  Widget build(BuildContext context) {
+    return GetMaterialApp(
+      home: SplashScreen(),
+      debugShowCheckedModeBanner: false,
+      initialBinding: APIBinding(), // Now valid
+    );
+  }
+}

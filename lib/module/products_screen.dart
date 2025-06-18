@@ -1,7 +1,6 @@
 import 'package:e_commers_app/module/model/products_detail_model.dart';
 import 'package:e_commers_app/module/products_detail_screen.dart';
 import 'package:flutter/material.dart';
-import 'dart:convert';
 import 'model/product_model.dart';
 
 class ProductsScreen extends StatelessWidget {
