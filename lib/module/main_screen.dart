@@ -1,3 +1,8 @@
+import 'dart:convert';
+import 'package:e_commers_app/module/account_screen.dart';
+import 'package:e_commers_app/module/cartview.dart';
+import 'package:e_commers_app/module/home_screen.dart';
+import 'package:e_commers_app/service/storage_service.dart';
 import 'package:e_commers_app/module/edit_profile_screen.dart';
 import 'package:e_commers_app/module/myFavScreen.dart';
 import 'package:e_commers_app/module/account_screen.dart';
@@ -16,6 +21,28 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
 
+  String username = 'YourUsername';
+  String emailOrPhone = 'your@email.com';
+  String? profileImage;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    final userJson = await StorageService.read(key: 'user');
+    if (userJson != null) {
+      final Map<String, dynamic> userMap = jsonDecode(userJson);
+      setState(() {
+        username = userMap['name'] ?? 'YourUsername';
+        emailOrPhone = userMap['email'] ?? 'your@email.com';
+        profileImage = userMap['profileImage'];
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,13 +55,10 @@ class _MainScreenState extends State<MainScreen> {
     return IndexedStack(
       index: _currentIndex,
       children: [
-        HomeScreen(),
-        MyOrderScreen(),
-        MyScreen(favoriteProducts: favoriteProducts),
-        EditProfileScreen(),
-        Center(child: Text('Order Page')),
-        Center(child: Text('Order Page')),
-        AccountScreen(username: 'YourUsername', emailOrPhone: 'your@email.com'),
+        const HomeScreen(),
+        const CartScreen(),
+        const Center(child: Text('Order Page')),
+        const AccountScreen(),
       ],
     );
   }
@@ -59,8 +83,8 @@ class _MainScreenState extends State<MainScreen> {
           _currentIndex = index;
         });
       },
-      items: const [
-        BottomNavigationBarItem(
+      items: [
+        const BottomNavigationBarItem(
           icon: ImageIcon(AssetImage('images/Home_icon.png')),
           label: 'HOME',
         ),
@@ -75,7 +99,9 @@ class _MainScreenState extends State<MainScreen> {
         BottomNavigationBarItem(
           icon: CircleAvatar(
             radius: 12,
-            backgroundImage: AssetImage('images/profile.png'),
+            backgroundImage: profileImage != null
+                ? NetworkImage(profileImage!)
+                : const AssetImage('images/profile.png') as ImageProvider,
           ),
           label: 'ACCOUNT',
         ),
