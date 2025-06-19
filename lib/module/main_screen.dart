@@ -30,7 +30,7 @@ class _MainScreenState extends State<MainScreen> {
       children: [
         HomeScreen(),
         MyOrderScreen(),
-        MyScreen(favoriteProducts: favoriteProducts),
+        MyFavScreen(favoriteProducts: favoriteProducts),
         EditProfileScreen(),
         Center(child: Text('Order Page')),
         Center(child: Text('Order Page')),
