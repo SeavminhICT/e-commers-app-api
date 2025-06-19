@@ -16,11 +16,68 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late Future<Map<String, dynamic>> _homeData;
+  PageController _controller = PageController();
+  int _currentIndex = 0;
+  Timer? _timer;
+  final List<String> _imagePaths = [
+    'images/16987373017frli-photo-2023-10-31-14-17-09.jpg',
+    'images/Visa-Promotion-ProEng.jpg',
+    'images/Website-Booking.com-Promotion-Visa.png',
+    'images/16987373017frli-photo-2023-10-31-14-17-09.jpg',
+    'images/Visa-Promotion-ProEng.jpg',
+  ];
+  List<String> _productImageUrlsToPrecache = [];
+
 
   @override
   void initState() {
     super.initState();
     _homeData = _loadHomeData();
+    _startAutoSlideShow();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Pre-cache asset images for the slideshow
+    for (var path in _imagePaths) {
+      precacheImage(AssetImage(path), context);
+    }
+    // Pre-cache network images for products after data is loaded
+    _homeData.then((data) {
+      final productsModel = data['Products'] as ProductsModel;
+      final allProducts = productsModel.categories
+          .expand((category) => category.products)
+          .toList();
+      for (var product in allProducts) {
+        _productImageUrlsToPrecache.add(fixUrl(product.image));
+      }
+      for (var imageUrl in _productImageUrlsToPrecache) {
+        precacheImage(NetworkImage(imageUrl), context);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _startAutoSlideShow() {
+    _timer = Timer.periodic(const Duration(seconds: 8), (timer) {
+      if (!_controller.hasClients) return; // Check if controller is attached
+      int nextPage = _currentIndex + 1;
+      if (nextPage >= _imagePaths.length) {
+        nextPage = 0;
+      }
+      _controller.animateToPage(
+        nextPage,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    });
   }
 
   Future<Map<String, dynamic>> _loadHomeData() async {
@@ -36,6 +93,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void reloadData() {
     setState(() {
       _homeData = _loadHomeData();
+      _productImageUrlsToPrecache.clear(); // Clear old URLs for fresh pre-caching
     });
   }
 
@@ -130,7 +188,7 @@ class _HomeScreenState extends State<HomeScreen> {
           );
 
           for (var product in getProductsByCategory.products) {
-            print('Product: ${product.name}, Price: ${product.price}');
+            debugPrint('Product: ${product.name}, Price: ${product.price}');
           }
 
           return SingleChildScrollView(
@@ -161,7 +219,7 @@ class _HomeScreenState extends State<HomeScreen> {
           height: 50,
           padding: const EdgeInsets.symmetric(horizontal: 16),
           decoration: BoxDecoration(
-            color: Color(0xFFFAFAFA),
+            color: const Color(0xFFFAFAFA),
             borderRadius: BorderRadius.circular(8),
             boxShadow: [
               BoxShadow(
@@ -190,81 +248,63 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget buildAutoSlideShow() {
-    final List<String> _imagePaths = [
-      'images/16987373017frli-photo-2023-10-31-14-17-09.jpg',
-      'images/Visa-Promotion-ProEng.jpg',
-      'images/Website-Booking.com-Promotion-Visa.png',
-      'images/16987373017frli-photo-2023-10-31-14-17-09.jpg',
-      'images/Visa-Promotion-ProEng.jpg',
-    ];
-
-    PageController _controller = PageController();
-    int _currentIndex = 0;
-    Timer? _timer;
-
-    return StatefulBuilder(
-      builder: (context, setState) {
-        if (_timer == null) {
-          _timer = Timer.periodic(const Duration(seconds: 8), (timer) {
-            int nextPage = _currentIndex + 1;
-            if (nextPage >= _imagePaths.length) nextPage = 0;
-            _controller.animateToPage(
-              nextPage,
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeInOut,
-            );
-          });
-        }
-        return Container(
-          color: Colors.white,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 150,
-                  child: PageView.builder(
-                    controller: _controller,
-                    onPageChanged: (index) {
-                      setState(() {
-                        _currentIndex = index;
-                      });
-                    },
-                    itemCount: _imagePaths.length,
-                    itemBuilder: (context, index) {
-                      return ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: Image.asset(
-                          _imagePaths[index],
-                          fit: BoxFit.cover,
-                          width: double.infinity,
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(_imagePaths.length, (index) {
-                    return AnimatedContainer(
-                      duration: const Duration(milliseconds: 300),
-                      margin: const EdgeInsets.symmetric(horizontal: 4),
-                      width: _currentIndex == index ? 12 : 8,
-                      height: _currentIndex == index ? 12 : 8,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color:
-                            _currentIndex == index ? Colors.blue : Colors.grey,
-                      ),
-                    );
-                  }),
-                ),
-              ],
+    return Container(
+      color: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: Column(
+          children: [
+            SizedBox(
+              height: 150,
+              child: PageView.builder(
+                controller: _controller,
+                onPageChanged: (index) {
+                  setState(() {
+                    _currentIndex = index;
+                  });
+                },
+                itemCount: _imagePaths.length,
+                itemBuilder: (context, index) {
+                  return ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Image.asset(
+                      _imagePaths[index],
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                      frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+                        if (wasSynchronouslyLoaded) return child;
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      },
+                      errorBuilder: (context, error, stackTrace) {
+                        debugPrint('Error loading asset image: $error');
+                        return const Icon(Icons.broken_image, size: 50);
+                      },
+                    ),
+                  );
+                },
+              ),
             ),
-          ),
-        );
-      },
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(_imagePaths.length, (index) {
+                return AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                  width: _currentIndex == index ? 12 : 8,
+                  height: _currentIndex == index ? 12 : 8,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: _currentIndex == index ? Colors.blue : Colors.grey,
+                  ),
+                );
+              }),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -288,10 +328,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   'Categories',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-                // Text(
-                //   'See All',
-                //   style: TextStyle(color: Colors.blue),
-                // ),
               ],
             ),
           ),
@@ -338,8 +374,21 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Image.network(
                               imageUrl,
                               fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) =>
-                                  const Icon(Icons.image_not_supported),
+                              loadingBuilder: (context, child, loadingProgress) {
+                                if (loadingProgress == null) return child;
+                                return Center(
+                                  child: CircularProgressIndicator(
+                                    value: loadingProgress.expectedTotalBytes != null
+                                        ? loadingProgress.cumulativeBytesLoaded /
+                                            loadingProgress.expectedTotalBytes!
+                                        : null,
+                                  ),
+                                );
+                              },
+                              errorBuilder: (context, error, stackTrace) {
+                                debugPrint('Error loading category image: $error');
+                                return const Icon(Icons.broken_image, size: 40);
+                              },
                             ),
                           ),
                         ),
@@ -383,6 +432,9 @@ class _HomeScreenState extends State<HomeScreen> {
     if (products.isEmpty) {
       return const Center(child: Text('No products found.'));
     }
+    // Limit to the first 2 products for the "Featured Product" section
+    final displayProducts = products.take(2).toList();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -418,7 +470,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: 2,
+            itemCount: displayProducts.length, // Corrected to use displayProducts.length
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               crossAxisSpacing: 12,
@@ -426,7 +478,7 @@ class _HomeScreenState extends State<HomeScreen> {
               childAspectRatio: 0.75,
             ),
             itemBuilder: (context, index) {
-              final product = products[index];
+              final product = displayProducts[index];
               final imageUrl = fixUrl(product.image);
               return GestureDetector(
                 onTap: () {
@@ -463,8 +515,21 @@ class _HomeScreenState extends State<HomeScreen> {
                             height: 150,
                             width: 150,
                             fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) =>
-                                const Icon(Icons.image_not_supported),
+                            loadingBuilder: (context, child, loadingProgress) {
+                              if (loadingProgress == null) return child;
+                              return Center(
+                                child: CircularProgressIndicator(
+                                  value: loadingProgress.expectedTotalBytes != null
+                                      ? loadingProgress.cumulativeBytesLoaded /
+                                          loadingProgress.expectedTotalBytes!
+                                      : null,
+                                ),
+                              );
+                            },
+                            errorBuilder: (context, error, stackTrace) {
+                              debugPrint('Error loading product image: $error');
+                              return const Icon(Icons.broken_image, size: 50);
+                            },
                           ),
                         ),
                       ),
@@ -496,7 +561,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             product.rating.toString(),
                             style: const TextStyle(fontSize: 12),
                           ),
-                          Spacer(),
+                          const Spacer(),
                           Align(
                             alignment: Alignment.bottomRight,
                             child: Icon(Icons.more_vert,
@@ -522,6 +587,9 @@ class _HomeScreenState extends State<HomeScreen> {
     final lowPriceProducts = List<Product>.from(products)
       ..sort((a, b) => double.parse(a.price).compareTo(double.parse(b.price)));
 
+    // Limit to the first 2 products for the "Best Sellers" section
+    final displayProducts = lowPriceProducts.take(2).toList();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -539,8 +607,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) =>
-                          ProductsScreen(products: lowPriceProducts),
+                      builder: (_) => ProductsScreen(products: lowPriceProducts),
                     ),
                   );
                 },
@@ -558,7 +625,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: 2,
+            itemCount: displayProducts.length, // Corrected to use displayProducts.length
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               crossAxisSpacing: 12,
@@ -566,8 +633,8 @@ class _HomeScreenState extends State<HomeScreen> {
               childAspectRatio: 0.75,
             ),
             itemBuilder: (context, index) {
-              final product = lowPriceProducts[index];
-              final imageUrl = fixUrl(lowPriceProducts[index].image);
+              final product = displayProducts[index];
+              final imageUrl = fixUrl(product.image);
               return GestureDetector(
                 onTap: () {
                   Navigator.push(
@@ -603,8 +670,21 @@ class _HomeScreenState extends State<HomeScreen> {
                             height: 150,
                             width: 150,
                             fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) =>
-                                const Icon(Icons.image_not_supported),
+                            loadingBuilder: (context, child, loadingProgress) {
+                              if (loadingProgress == null) return child;
+                              return Center(
+                                child: CircularProgressIndicator(
+                                  value: loadingProgress.expectedTotalBytes != null
+                                      ? loadingProgress.cumulativeBytesLoaded /
+                                          loadingProgress.expectedTotalBytes!
+                                      : null,
+                                ),
+                              );
+                            },
+                            errorBuilder: (context, error, stackTrace) {
+                              debugPrint('Error loading product image: $error');
+                              return const Icon(Icons.broken_image, size: 50);
+                            },
                           ),
                         ),
                       ),
@@ -636,7 +716,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             product.rating.toString(),
                             style: const TextStyle(fontSize: 12),
                           ),
-                          Spacer(),
+                          const Spacer(),
                           Align(
                             alignment: Alignment.bottomRight,
                             child: Icon(Icons.more_vert,
@@ -661,6 +741,10 @@ class _HomeScreenState extends State<HomeScreen> {
     }
     final topRatedProducts = List<Product>.from(products)
       ..sort((a, b) => b.rating.compareTo(a.rating));
+
+    // Limit to the first 2 products for the "Top Rated Products" section
+    final displayProducts = topRatedProducts.take(2).toList();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -678,8 +762,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) =>
-                          ProductsScreen(products: topRatedProducts),
+                      builder: (_) => ProductsScreen(products: topRatedProducts),
                     ),
                   );
                 },
@@ -697,7 +780,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: 2,
+            itemCount: displayProducts.length, // Corrected to use displayProducts.length
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               crossAxisSpacing: 12,
@@ -705,8 +788,8 @@ class _HomeScreenState extends State<HomeScreen> {
               childAspectRatio: 0.75,
             ),
             itemBuilder: (context, index) {
-              final product = topRatedProducts[index];
-              final imageUrl = fixUrl(topRatedProducts[index].image);
+              final product = displayProducts[index];
+              final imageUrl = fixUrl(product.image);
               return GestureDetector(
                 onTap: () {
                   Navigator.push(
@@ -742,8 +825,21 @@ class _HomeScreenState extends State<HomeScreen> {
                             height: 150,
                             width: 150,
                             fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) =>
-                                const Icon(Icons.image_not_supported),
+                            loadingBuilder: (context, child, loadingProgress) {
+                              if (loadingProgress == null) return child;
+                              return Center(
+                                child: CircularProgressIndicator(
+                                  value: loadingProgress.expectedTotalBytes != null
+                                      ? loadingProgress.cumulativeBytesLoaded /
+                                          loadingProgress.expectedTotalBytes!
+                                      : null,
+                                ),
+                              );
+                            },
+                            errorBuilder: (context, error, stackTrace) {
+                              debugPrint('Error loading product image: $error');
+                              return const Icon(Icons.broken_image, size: 50);
+                            },
                           ),
                         ),
                       ),
@@ -775,7 +871,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             product.rating.toString(),
                             style: const TextStyle(fontSize: 12),
                           ),
-                          Spacer(),
+                          const Spacer(),
                           Align(
                             alignment: Alignment.bottomRight,
                             child: Icon(Icons.more_vert,

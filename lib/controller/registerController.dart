@@ -18,7 +18,7 @@ class RegisterController extends GetxController {
 
   @override
   void onInit() {
-    getGeneratedDataUser();
+    // getGeneratedDataUser();
     super.onInit();
   }
 
@@ -33,12 +33,12 @@ class RegisterController extends GetxController {
     }
   }
 
-  void getGeneratedDataUser() {
-    namecontroller.text = _faker.person.name();
-    emailcontroller.text = _faker.internet.email();
-    passwordcontroller.text = "12345678";
-    confirmPasswordController.text = "12345678";
-  }
+  // void getGeneratedDataUser() {
+  //   namecontroller.text = _faker.person.name();
+  //   emailcontroller.text = _faker.internet.email();
+  //   passwordcontroller.text = "12345678";
+  //   confirmPasswordController.text = "12345678";
+  // }
 
   void register(
       {required String name,
@@ -50,21 +50,50 @@ class RegisterController extends GetxController {
       if (response.statusCode == 200) {
         // success
         Get.dialog(
-          AlertDialog(
-            title: const Text('Success'),
-            content: const Text('Registration successful'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Get.back();
-                  Get.back(result: {
-                    'email': email,
-                    'password': password,
-                  });
-                },
-                child: const Text('OK'),
+          Dialog(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            backgroundColor: Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.check_circle, color: Colors.green, size: 60),
+                  SizedBox(height: 16),
+                  Text(
+                    'Success',
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 12),
+                  Text(
+                    'Registration successful',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 16, color: Colors.black54),
+                  ),
+                  SizedBox(height: 24),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.orange,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      onPressed: () {
+                        Get.back(); // Close dialog
+                        Get.back(result: {
+                          'email': email,
+                          'password': password,
+                        }); // Go back to previous screen with result
+                      },
+                      child: Text('Continue'),
+                    ),
+                  )
+                ],
               ),
-            ],
+            ),
           ),
         );
       }
