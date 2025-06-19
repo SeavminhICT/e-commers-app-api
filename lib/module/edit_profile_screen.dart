@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:e_commers_app/service/storage_service.dart';
 import 'package:flutter/material.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -10,6 +13,36 @@ class EditProfileScreen extends StatefulWidget {
 class _EditProfileScreenState extends State<EditProfileScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
+
+  String username = 'YourUsername';
+  String emailOrPhone = 'your@email.com';
+  String linkedAccount = 'Google';
+  String avatar = 'avatar';
+
+  String fixUrl(String url) {
+    if (url.startsWith('https://')) {
+      return url.replaceFirst('https://', 'http://');
+    }
+    return url;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    final userJson = await StorageService.read(key: 'user');
+    if (userJson != null) {
+      final Map<String, dynamic> userMap = jsonDecode(userJson);
+      setState(() {
+        username = userMap['name'] ?? 'YourUsername';
+        emailOrPhone = userMap['email'] ?? 'your@email.com';
+        avatar = userMap['avatar'];
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,14 +75,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   Widget _buildBody() {
+    final imageUrl = fixUrl(avatar);
     return ListView(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
       children: [
         Center(
           child: CircleAvatar(
-            radius: 48,
-            backgroundImage: AssetImage('images/profile.png'),
-          ),
+              radius: 52,
+              backgroundImage: imageUrl != null && imageUrl!.isNotEmpty
+                  ? NetworkImage(imageUrl!) as ImageProvider
+                  : const AssetImage('images/profile.png'),
+            ),
         ),
         const SizedBox(height: 32),
         _buildSectionTitle('Username'),
@@ -155,7 +191,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ),
         child: const Text(
           'Save Changes',
-          style: TextStyle(fontSize: 16,color: Colors.white,
+          style: TextStyle(
+            fontSize: 16,
+            color: Colors.white,
           ),
           textAlign: TextAlign.center,
         ),
