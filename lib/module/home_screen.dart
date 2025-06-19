@@ -183,14 +183,9 @@ class _HomeScreenState extends State<HomeScreen> {
               .expand((category) => category.products)
               .toList();
 
-          final getProductsByCategory = productsModel.categories.firstWhere(
-            (cat) => cat.id == 1,
-            orElse: () => Category(id: 0, name: '', products: []),
-          );
+  
 
-          for (var product in getProductsByCategory.products) {
-            debugPrint('Product: ${product.name}, Price: ${product.price}');
-          }
+  
 
           return SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),

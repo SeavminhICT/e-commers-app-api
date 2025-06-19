@@ -1,17 +1,45 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:e_commers_app/service/storage_service.dart';
 import 'settings_screen.dart';
 
-class AccountScreen extends StatelessWidget {
-  final String username;
-  final String emailOrPhone;
-  final String linkedAccount;
+class AccountScreen extends StatefulWidget {
+  const AccountScreen({super.key});
 
-  const AccountScreen({
-    super.key,
-    required this.username,
-    required this.emailOrPhone,
-    this.linkedAccount = 'Google',
-  });
+  @override
+  State<AccountScreen> createState() => _AccountScreenState();
+}
+
+class _AccountScreenState extends State<AccountScreen> {
+  String username = 'YourUsername';
+  String emailOrPhone = 'your@email.com';
+  String linkedAccount = 'Google';
+  String avatar = 'avatar';
+
+  String fixUrl(String url) {
+    if (url.startsWith('https://')) {
+      return url.replaceFirst('https://', 'http://');
+    }
+    return url;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    final userJson = await StorageService.read(key: 'user');
+    if (userJson != null) {
+      final Map<String, dynamic> userMap = jsonDecode(userJson);
+      setState(() {
+        username = userMap['name'] ?? 'YourUsername';
+        emailOrPhone = userMap['email'] ?? 'your@email.com';
+        avatar = userMap['avatar'];
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +77,7 @@ class AccountScreen extends StatelessWidget {
   }
 
   Widget _buildBody(BuildContext context) {
+    final imageUrl = fixUrl(avatar);
     return ListView(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
       children: [
@@ -66,7 +95,9 @@ class AccountScreen extends StatelessWidget {
             ),
             child: CircleAvatar(
               radius: 52,
-              backgroundImage: AssetImage('images/profile.png'),
+              backgroundImage: imageUrl != null && imageUrl!.isNotEmpty
+                  ? NetworkImage(imageUrl!) as ImageProvider
+                  : const AssetImage('images/profile.png'),
             ),
           ),
         ),
