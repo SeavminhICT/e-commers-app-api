@@ -14,7 +14,14 @@ class _AccountScreenState extends State<AccountScreen> {
   String username = 'YourUsername';
   String emailOrPhone = 'your@email.com';
   String linkedAccount = 'Google';
-  String? avatar;
+  String avatar = 'avatar';
+
+  String fixUrl(String url) {
+    if (url.startsWith('https://')) {
+      return url.replaceFirst('https://', 'http://');
+    }
+    return url;
+  }
 
   @override
   void initState() {
@@ -29,7 +36,7 @@ class _AccountScreenState extends State<AccountScreen> {
       setState(() {
         username = userMap['name'] ?? 'YourUsername';
         emailOrPhone = userMap['email'] ?? 'your@email.com';
-        avatar = userMap['avatar']; // Adjust key as per API response
+        avatar = userMap['avatar'];
       });
     }
   }
@@ -70,6 +77,7 @@ class _AccountScreenState extends State<AccountScreen> {
   }
 
   Widget _buildBody(BuildContext context) {
+    final imageUrl = fixUrl(avatar);
     return ListView(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
       children: [
@@ -87,9 +95,9 @@ class _AccountScreenState extends State<AccountScreen> {
             ),
             child: CircleAvatar(
               radius: 52,
-              backgroundImage: avatar != null
-                  ? NetworkImage(avatar!)
-                  : AssetImage('images/profile.png'),
+              backgroundImage: imageUrl != null && imageUrl!.isNotEmpty
+                  ? NetworkImage(imageUrl!) as ImageProvider
+                  : const AssetImage('images/profile.png'),
             ),
           ),
         ),

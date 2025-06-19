@@ -189,10 +189,10 @@ packages:
     dependency: transitive
     description:
       name: device_info_plus_platform_interface
-      sha256: e1ea89119e34903dca74b883d0dd78eb762814f97fb6c76f35e9ff74d261a18f
+      sha256: "0b04e02b30791224b31969eb1b50d723498f402971bff3630bca2ba839bd1ed2"
       url: "https://pub.dev"
     source: hosted
-    version: "7.0.3"
+    version: "7.0.2"
   dio:
     dependency: "direct main"
     description:
@@ -516,10 +516,10 @@ packages:
     dependency: transitive
     description:
       name: google_maps_flutter_web
-      sha256: a9822dbf31a3f76f239f6bda346511b051d3edf739806e9091be2729e8b645de
+      sha256: a45786ea6691cc7cdbe2cf3ce2c2daf4f82a885745666b4a36baada3a4e12897
       url: "https://pub.dev"
     source: hosted
-    version: "0.5.12+1"
+    version: "0.5.12"
   gradient_borders:
     dependency: "direct main"
     description:
@@ -1190,10 +1190,5 @@ packages:
     source: hosted
     version: "6.5.0"
 sdks:
-<<<<<<< HEAD
   dart: ">=3.7.0 <4.0.0"
   flutter: ">=3.27.0"
-=======
-  dart: ">=3.7.0-0 <4.0.0"
-  flutter: ">=3.24.0"
->>>>>>> 8955285b8ce8eee9142c09959d65a6868a650c48
