@@ -1,3 +1,4 @@
+import 'package:e_commers_app/module/fav_noti_screen.dart';
 import 'package:e_commers_app/module/model/products_detail_model.dart';
 import 'package:e_commers_app/module/products_screen.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +28,6 @@ class _HomeScreenState extends State<HomeScreen> {
     'images/Visa-Promotion-ProEng.jpg',
   ];
   List<String> _productImageUrlsToPrecache = [];
-
 
   @override
   void initState() {
@@ -93,7 +93,8 @@ class _HomeScreenState extends State<HomeScreen> {
   void reloadData() {
     setState(() {
       _homeData = _loadHomeData();
-      _productImageUrlsToPrecache.clear(); // Clear old URLs for fresh pre-caching
+      _productImageUrlsToPrecache
+          .clear(); // Clear old URLs for fresh pre-caching
     });
   }
 
@@ -143,7 +144,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: 20,
                 width: 20,
               ),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => NotificationScreen()),
+                );
+              },
             ),
             IconButton(
               icon: Image.asset(
@@ -271,7 +277,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       _imagePaths[index],
                       fit: BoxFit.cover,
                       width: double.infinity,
-                      frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+                      frameBuilder:
+                          (context, child, frame, wasSynchronouslyLoaded) {
                         if (wasSynchronouslyLoaded) return child;
                         return Center(
                           child: CircularProgressIndicator(),
@@ -373,20 +380,26 @@ class _HomeScreenState extends State<HomeScreen> {
                             borderRadius: BorderRadius.circular(16),
                             child: Image.network(
                               imageUrl,
-                              fit: BoxFit.cover,
-                              loadingBuilder: (context, child, loadingProgress) {
+                              width: 20,
+                              height: 20,
+                              fit: BoxFit.contain,
+                              loadingBuilder:
+                                  (context, child, loadingProgress) {
                                 if (loadingProgress == null) return child;
                                 return Center(
                                   child: CircularProgressIndicator(
-                                    value: loadingProgress.expectedTotalBytes != null
-                                        ? loadingProgress.cumulativeBytesLoaded /
+                                    value: loadingProgress.expectedTotalBytes !=
+                                            null
+                                        ? loadingProgress
+                                                .cumulativeBytesLoaded /
                                             loadingProgress.expectedTotalBytes!
                                         : null,
                                   ),
                                 );
                               },
                               errorBuilder: (context, error, stackTrace) {
-                                debugPrint('Error loading category image: $error');
+                                debugPrint(
+                                    'Error loading category image: $error');
                                 return const Icon(Icons.broken_image, size: 40);
                               },
                             ),
@@ -433,7 +446,7 @@ class _HomeScreenState extends State<HomeScreen> {
       return const Center(child: Text('No products found.'));
     }
     // Limit to the first 2 products for the "Featured Product" section
-    final displayProducts = products.take(2).toList();
+    final displayProducts = products.take(6).toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -470,7 +483,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: displayProducts.length, // Corrected to use displayProducts.length
+            itemCount: 4, // Corrected to use displayProducts.length
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               crossAxisSpacing: 12,
@@ -514,12 +527,13 @@ class _HomeScreenState extends State<HomeScreen> {
                             imageUrl,
                             height: 150,
                             width: 150,
-                            fit: BoxFit.cover,
+                            fit: BoxFit.contain,
                             loadingBuilder: (context, child, loadingProgress) {
                               if (loadingProgress == null) return child;
                               return Center(
                                 child: CircularProgressIndicator(
-                                  value: loadingProgress.expectedTotalBytes != null
+                                  value: loadingProgress.expectedTotalBytes !=
+                                          null
                                       ? loadingProgress.cumulativeBytesLoaded /
                                           loadingProgress.expectedTotalBytes!
                                       : null,
@@ -588,7 +602,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ..sort((a, b) => double.parse(a.price).compareTo(double.parse(b.price)));
 
     // Limit to the first 2 products for the "Best Sellers" section
-    final displayProducts = lowPriceProducts.take(2).toList();
+    final displayProducts = lowPriceProducts.take(4).toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -607,7 +621,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => ProductsScreen(products: lowPriceProducts),
+                      builder: (_) =>
+                          ProductsScreen(products: lowPriceProducts),
                     ),
                   );
                 },
@@ -625,7 +640,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: displayProducts.length, // Corrected to use displayProducts.length
+            itemCount: 4, // Corrected to use displayProducts.length
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               crossAxisSpacing: 12,
@@ -674,7 +689,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               if (loadingProgress == null) return child;
                               return Center(
                                 child: CircularProgressIndicator(
-                                  value: loadingProgress.expectedTotalBytes != null
+                                  value: loadingProgress.expectedTotalBytes !=
+                                          null
                                       ? loadingProgress.cumulativeBytesLoaded /
                                           loadingProgress.expectedTotalBytes!
                                       : null,
@@ -743,7 +759,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ..sort((a, b) => b.rating.compareTo(a.rating));
 
     // Limit to the first 2 products for the "Top Rated Products" section
-    final displayProducts = topRatedProducts.take(2).toList();
+    final displayProducts = topRatedProducts.take(4).toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -762,7 +778,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => ProductsScreen(products: topRatedProducts),
+                      builder: (_) =>
+                          ProductsScreen(products: topRatedProducts),
                     ),
                   );
                 },
@@ -780,7 +797,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: displayProducts.length, // Corrected to use displayProducts.length
+            itemCount: 4, // Corrected to use displayProducts.length
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               crossAxisSpacing: 12,
@@ -829,7 +846,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               if (loadingProgress == null) return child;
                               return Center(
                                 child: CircularProgressIndicator(
-                                  value: loadingProgress.expectedTotalBytes != null
+                                  value: loadingProgress.expectedTotalBytes !=
+                                          null
                                       ? loadingProgress.cumulativeBytesLoaded /
                                           loadingProgress.expectedTotalBytes!
                                       : null,

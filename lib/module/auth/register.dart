@@ -91,6 +91,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   if (!value.contains('@gmail.com')) {
                     return 'Please enter a valid email';
                   }
+
                   return null;
                 },
               ),
