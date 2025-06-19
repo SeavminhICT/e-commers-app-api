@@ -1,4 +1,6 @@
+import 'package:e_commers_app/module/api_service/api_service.dart';
 import 'package:e_commers_app/module/model/products_detail_model.dart';
+import 'package:e_commers_app/service/storage_service.dart';
 import 'package:flutter/material.dart';
 
 class ProductsDetailScreen extends StatefulWidget {
@@ -158,6 +160,8 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
                 ),
               ),
             ),
+
+            // Buy Now + Add to Cart
             Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -165,7 +169,9 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
                 children: [
                   Expanded(
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        // Future feature: handle "Buy Now"
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blue,
                         padding: const EdgeInsets.symmetric(vertical: 16),
@@ -182,9 +188,33 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
                   const SizedBox(width: 12),
                   Expanded(
                     child: ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
+                        final token = await StorageService.read(key: 'token');
+                        print(token);
+
+                        if (token == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text('You must login to add to cart')),
+                          );
+                          return;
+                        }
+                        final success = await ApiService.addToCart(
+                          productId: int.parse(widget.product.productId),
+                          quantity: 1,
+                          authToken: token,
+                          price: double.parse(
+                              product.productPrice.toString()), // if needed
+                        );
+
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Added to cart')),
+                          SnackBar(
+                            content: Text(
+                              success
+                                  ? 'Product added to cart'
+                                  : 'Failed to add to cart',
+                            ),
+                          ),
                         );
                       },
                       style: ElevatedButton.styleFrom(
@@ -200,7 +230,6 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 12),
                 ],
               ),
             ),

@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:e_commers_app/module/account_screen.dart';
 import 'package:e_commers_app/module/home_screen.dart';
 import 'package:e_commers_app/service/storage_service.dart';
@@ -32,7 +31,7 @@ class _MainScreenState extends State<MainScreen> {
       setState(() {
         username = userMap['name'] ?? 'YourUsername';
         emailOrPhone = userMap['email'] ?? 'your@email.com';
-        profileImage = userMap['profileImage']; // Adjust key as per API response
+        profileImage = userMap['profileImage'];
       });
     }
   }
@@ -52,11 +51,7 @@ class _MainScreenState extends State<MainScreen> {
         const HomeScreen(),
         const Center(child: Text('Order Page')),
         const Center(child: Text('Order Page')),
-        AccountScreen(
-          username: username,
-          emailOrPhone: emailOrPhone,
-          profileImage: profileImage,
-        ),
+        const AccountScreen(),
       ],
     );
   }
@@ -86,14 +81,17 @@ class _MainScreenState extends State<MainScreen> {
           icon: ImageIcon(AssetImage('images/Home_icon.png')),
           label: 'HOME',
         ),
-        const BottomNavigationBarItem(
-          icon: ImageIcon(AssetImage('images/wishlist_icon.png')),
-          label: 'WISHLIST',
-        ),
-        const BottomNavigationBarItem(
+
+         BottomNavigationBarItem(
           icon: ImageIcon(AssetImage('images/order_icon.png')),
-          label: 'ORDER',
+          label: 'MYORDER',
         ),
+        BottomNavigationBarItem(
+          icon: ImageIcon(AssetImage('images/wishlist_icon.png')),
+          label: 'FAVORITE',
+
+        ),
+       
         BottomNavigationBarItem(
           icon: CircleAvatar(
             radius: 12,
