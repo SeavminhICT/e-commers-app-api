@@ -105,18 +105,12 @@ class NotificationScreen extends StatelessWidget {
                   endIndent: 16,
                 ),
                 _buildNotificationItem(
+                  icon: Icons.message_outlined,
                   isMessage: true,
                   title: 'Customer Support',
-                  message: 'Your ticket #12345 has been resolved. How was our service?',
+                  message: 'Hi, how can we assist you today? 😊',
                   time: '2h ago',
                   hasReply: true,
-                ),
-                Divider(
-                  color: Colors.grey[300],
-                  thickness: 1,
-                  height: 1,
-                  indent: 16,
-                  endIndent: 16,
                 ),
                 _buildNotificationItem(
                   icon: Icons.update,
