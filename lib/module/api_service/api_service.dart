@@ -52,4 +52,39 @@ class ApiService {
       return false;
     }
   }
+
+    // Login method to get auth token and user data
+  Future<Map<String, dynamic>> login(String email, String password) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/login'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'email': email, 'password': password}),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return data; // contains 'token' and 'user'
+    } else {
+      throw Exception('Failed to login');
+    }
+  }
+
+  // Fetch user profile using token
+  Future<Map<String, dynamic>> getUserProfile(String token) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/profile'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return data['user'];
+    } else {
+      throw Exception('Failed to fetch user profile');
+    }
+  }
+
 }
