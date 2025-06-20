@@ -287,6 +287,7 @@ void sortProducts(SortOption option) {
                       child: Image.network(
                         fixUrl(product.productImageUrl),
                         fit: BoxFit.contain,
+                        
                       ),
                     ),
                   ),
