@@ -31,6 +31,33 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: 20),
+              GetBuilder<RegisterController>(
+                builder: (logic) {
+                  return Stack(
+                    children: [
+                      CircleAvatar(
+                        radius: 50,
+                        backgroundImage: logic.profileImg == null
+                            ? NetworkImage(kNOImgUrl)
+                            : FileImage(logic.profileImg!) as ImageProvider,
+                      ),
+                      Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: IconButton(
+                          icon: Icon(Icons.camera_alt),
+                          onPressed: () {
+                            logic.pickImage();
+                          },
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+              SizedBox(
+                height: 20,
+              ),
 
               // Name
               TextFormField(
@@ -61,9 +88,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your email';
                   }
-                  if (!value.contains('@')) {
+                  if (!value.contains('@gmail.com')) {
                     return 'Please enter a valid email';
                   }
+
                   return null;
                 },
               ),
@@ -116,30 +144,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               SizedBox(height: 16),
 
               // Profile Image Picker
-              GetBuilder<RegisterController>(
-                builder: (logic) {
-                  return Stack(
-                    children: [
-                      CircleAvatar(
-                        radius: 50,
-                        backgroundImage: logic.profileImg == null
-                            ? NetworkImage(kNOImgUrl)
-                            : FileImage(logic.profileImg!) as ImageProvider,
-                      ),
-                      Positioned(
-                        bottom: 0,
-                        right: 0,
-                        child: IconButton(
-                          icon: Icon(Icons.camera_alt),
-                          onPressed: () {
-                            logic.pickImage();
-                          },
-                        ),
-                      ),
-                    ],
-                  );
-                },
-              ),
+
               SizedBox(height: 20),
 
               // Sign Up Button
@@ -153,9 +158,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         name: name, email: email, password: password);
                   }
                 },
-                child: Text('Sign Up'),
+                child: Text(
+                  'Sign Up',
+                  style: TextStyle(color: Colors.white),
+                ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.orange,
+                  backgroundColor: Colors.deepPurple,
                   padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                 ),
               ),

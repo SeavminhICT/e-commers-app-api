@@ -1,17 +1,47 @@
+import 'dart:convert';
+import 'package:e_commers_app/module/auth/register.dart';
 import 'package:flutter/material.dart';
+import 'package:e_commers_app/service/storage_service.dart';
+import 'package:get/get.dart';
 import 'settings_screen.dart';
 
-class AccountScreen extends StatelessWidget {
-  final String username;
-  final String emailOrPhone;
-  final String linkedAccount;
+class AccountScreen extends StatefulWidget {
+  const AccountScreen({super.key});
 
-  const AccountScreen({
-    super.key,
-    required this.username,
-    required this.emailOrPhone,
-    this.linkedAccount = 'Google',
-  });
+  @override
+  State<AccountScreen> createState() => _AccountScreenState();
+}
+
+class _AccountScreenState extends State<AccountScreen> {
+  String username = 'YourUsername';
+  String emailOrPhone = 'your@email.com';
+  String linkedAccount = 'Google';
+  String avatar = 'avatar';
+
+  String fixUrl(String url) {
+    if (url.startsWith('https://')) {
+      return url.replaceFirst('https://', 'http://');
+    }
+    return url;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    final userJson = await StorageService.read(key: 'user');
+    if (userJson != null) {
+      final Map<String, dynamic> userMap = jsonDecode(userJson);
+      setState(() {
+        username = userMap['name'] ?? 'YourUsername';
+        emailOrPhone = userMap['email'] ?? 'your@email.com';
+        avatar = userMap['avatar'];
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,12 +57,6 @@ class AccountScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       elevation: 2,
       centerTitle: true,
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back, color: Colors.deepPurple),
-        onPressed: () {
-          Navigator.of(context).pop();
-        },
-      ),
       title: const Text(
         'Account',
         style: TextStyle(
@@ -55,6 +79,7 @@ class AccountScreen extends StatelessWidget {
   }
 
   Widget _buildBody(BuildContext context) {
+    final imageUrl = fixUrl(avatar);
     return ListView(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
       children: [
@@ -72,7 +97,9 @@ class AccountScreen extends StatelessWidget {
             ),
             child: CircleAvatar(
               radius: 52,
-              backgroundImage: AssetImage('images/profile.png'),
+              backgroundImage: imageUrl != null && imageUrl!.isNotEmpty
+                  ? NetworkImage(imageUrl!) as ImageProvider
+                  : const AssetImage('images/profile.png'),
             ),
           ),
         ),
@@ -87,6 +114,10 @@ class AccountScreen extends StatelessWidget {
         const SizedBox(height: 28),
         _buildSectionTitle('Account Linked With'),
         _buildLinkedAccount(),
+        SizedBox(
+          height: 30,
+        ),
+        _buidingLogout(),
       ],
     );
   }
@@ -154,6 +185,63 @@ class AccountScreen extends StatelessWidget {
             color: const Color(0xFF7B1FA2),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buidingLogout() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      // Add some margin
+      decoration: BoxDecoration(
+        color: Colors.redAccent, // Background color for the button area
+        borderRadius: BorderRadius.circular(8.0), // Rounded corners
+        boxShadow: [
+          // Optional: Add a subtle shadow
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.3),
+            spreadRadius: 1,
+            blurRadius: 3,
+            offset: Offset(0, 2), // changes position of shadow
+          ),
+        ],
+      ),
+      child: TextButton(
+        style: TextButton.styleFrom(
+          padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+          // Padding inside the button
+          foregroundColor: Colors.cyan,
+          shape: RoundedRectangleBorder(
+            // Ensure the button shape matches the container
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+        ),
+        onPressed: () async {
+          await StorageService.delete(key: 'token');
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => RegisterScreen()),
+          );
+
+          print('Logout button pressed');
+        },
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center, // Center the content
+          children: [
+            Icon(
+              Icons.logout, // Logout icon
+              color: Colors.white, // Icon color
+            ),
+            SizedBox(width: 8.0), // Spacing between icon and text
+            Text(
+              'Logout',
+              style: TextStyle(
+                fontSize: 16.0,
+                fontWeight: FontWeight.bold,
+                color: Colors.white, // Text color
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

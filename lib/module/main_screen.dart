@@ -1,5 +1,13 @@
+import 'dart:convert';
 import 'package:e_commers_app/module/account_screen.dart';
 import 'package:e_commers_app/module/home_screen.dart';
+import 'package:e_commers_app/service/storage_service.dart';
+import 'package:e_commers_app/module/edit_profile_screen.dart';
+import 'package:e_commers_app/module/myFavScreen.dart';
+import 'package:e_commers_app/module/account_screen.dart';
+import 'package:e_commers_app/module/home_screen.dart';
+import 'package:e_commers_app/module/myorder_screen.dart';
+import 'package:e_commers_app/service/favorite_service.dart';
 import 'package:flutter/material.dart';
 
 class MainScreen extends StatefulWidget {
@@ -12,6 +20,34 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
 
+  String username = 'YourUsername';
+  String emailOrPhone = 'your@email.com';
+  String? profileImage;
+  String fixUrl(String url) {
+    if (url.startsWith('https://')) {
+      return url.replaceFirst('https://', 'http://');
+    }
+    return url;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    final userJson = await StorageService.read(key: 'user');
+    if (userJson != null) {
+      final Map<String, dynamic> userMap = jsonDecode(userJson);
+      setState(() {
+        username = userMap['name'] ?? 'YourUsername';
+        emailOrPhone = userMap['email'] ?? 'your@email.com';
+        profileImage = userMap['avatar'];
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,16 +59,17 @@ class _MainScreenState extends State<MainScreen> {
   Widget _buildBody() {
     return IndexedStack(
       index: _currentIndex,
-      children: const [
+      children: [
         HomeScreen(),
-        Center(child: Text('Order Page')),
-        Center(child: Text('Order Page')),
-        AccountScreen(username: 'YourUsername', emailOrPhone: 'your@email.com'),
+        MyOrderScreen(),
+        MyFavScreen(favoriteProducts: favoriteProducts),
+        EditProfileScreen(),
       ],
     );
   }
 
   Widget _buildNavigationBar() {
+    final imageUrl = profileImage != null ? fixUrl(profileImage!) : null;
     return BottomNavigationBar(
       currentIndex: _currentIndex,
       type: BottomNavigationBarType.fixed,
@@ -52,23 +89,25 @@ class _MainScreenState extends State<MainScreen> {
           _currentIndex = index;
         });
       },
-      items: const [
-        BottomNavigationBarItem(
+      items: [
+        const BottomNavigationBarItem(
           icon: ImageIcon(AssetImage('images/Home_icon.png')),
           label: 'HOME',
         ),
         BottomNavigationBarItem(
-          icon: ImageIcon(AssetImage('images/wishlist_icon.png')),
-          label: 'WISHLIST',
+          icon: ImageIcon(AssetImage('images/order_icon.png')),
+          label: 'MYORDER',
         ),
         BottomNavigationBarItem(
-          icon: ImageIcon(AssetImage('images/order_icon.png')),
-          label: 'ORDER',
+          icon: ImageIcon(AssetImage('images/wishlist_icon.png')),
+          label: 'FAVORITE',
         ),
         BottomNavigationBarItem(
           icon: CircleAvatar(
             radius: 12,
-            backgroundImage: AssetImage('images/profile.png'),
+            backgroundImage: imageUrl != null
+                ? NetworkImage(imageUrl!)
+                : const AssetImage('images/profile.png') as ImageProvider,
           ),
           label: 'ACCOUNT',
         ),
