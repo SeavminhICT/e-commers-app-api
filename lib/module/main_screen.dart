@@ -60,10 +60,10 @@ class _MainScreenState extends State<MainScreen> {
     return IndexedStack(
       index: _currentIndex,
       children: [
-        const HomeScreen(),
-        const Center(child: Text('Order Page')),
-        const Center(child: Text('Order Page')),
-        const AccountScreen(),
+        HomeScreen(),
+        MyOrderScreen(),
+        MyFavScreen(favoriteProducts: favoriteProducts),
+        EditProfileScreen(),
       ],
     );
   }
