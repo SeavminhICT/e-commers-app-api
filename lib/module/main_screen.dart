@@ -24,6 +24,12 @@ class _MainScreenState extends State<MainScreen> {
   String username = 'YourUsername';
   String emailOrPhone = 'your@email.com';
   String? profileImage;
+  String fixUrl(String url) {
+    if (url.startsWith('https://')) {
+      return url.replaceFirst('https://', 'http://');
+    }
+    return url;
+  }
 
   @override
   void initState() {
@@ -38,7 +44,7 @@ class _MainScreenState extends State<MainScreen> {
       setState(() {
         username = userMap['name'] ?? 'YourUsername';
         emailOrPhone = userMap['email'] ?? 'your@email.com';
-        profileImage = userMap['profileImage'];
+        profileImage = userMap['avatar'];
       });
     }
   }
@@ -64,6 +70,7 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Widget _buildNavigationBar() {
+    final imageUrl = profileImage != null ? fixUrl(profileImage!) : null;
     return BottomNavigationBar(
       currentIndex: _currentIndex,
       type: BottomNavigationBarType.fixed,
@@ -99,8 +106,8 @@ class _MainScreenState extends State<MainScreen> {
         BottomNavigationBarItem(
           icon: CircleAvatar(
             radius: 12,
-            backgroundImage: profileImage != null
-                ? NetworkImage(profileImage!)
+            backgroundImage: imageUrl != null
+                ? NetworkImage(imageUrl!)
                 : const AssetImage('images/profile.png') as ImageProvider,
           ),
           label: 'ACCOUNT',

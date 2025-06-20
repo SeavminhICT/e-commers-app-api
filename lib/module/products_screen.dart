@@ -73,6 +73,7 @@ class ProductsScreen extends StatelessWidget {
 
   Widget _buildProductCard(Product product) {
     final String imageUrl = fixUrl(product.image);
+    print("Image URL: $imageUrl");
     return Container(
       decoration: BoxDecoration(
         border: Border.all(color: Colors.blue.shade200, width: 1),

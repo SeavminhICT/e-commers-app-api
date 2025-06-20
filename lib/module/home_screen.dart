@@ -1,4 +1,5 @@
 import 'package:e_commers_app/module/fav_noti_screen.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_commers_app/module/model/products_detail_model.dart';
 import 'package:e_commers_app/module/products_screen.dart';
 import 'package:flutter/material.dart';
@@ -188,14 +189,9 @@ class _HomeScreenState extends State<HomeScreen> {
               .expand((category) => category.products)
               .toList();
 
-          final getProductsByCategory = productsModel.categories.firstWhere(
-            (cat) => cat.id == 1,
-            orElse: () => Category(id: 0, name: '', products: []),
-          );
+  
 
-          for (var product in getProductsByCategory.products) {
-            debugPrint('Product: ${product.name}, Price: ${product.price}');
-          }
+  
 
           return SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
@@ -483,7 +479,8 @@ class _HomeScreenState extends State<HomeScreen> {
           child: GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: 4, // Corrected to use displayProducts.length
+            itemCount: displayProducts
+                .length, // Corrected to use displayProducts.length
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               crossAxisSpacing: 12,
@@ -523,24 +520,15 @@ class _HomeScreenState extends State<HomeScreen> {
                       Center(
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(16),
-                          child: Image.network(
-                            imageUrl,
+                          child: CachedNetworkImage(
+                            imageUrl: imageUrl,
                             height: 150,
                             width: 150,
-                            fit: BoxFit.contain,
-                            loadingBuilder: (context, child, loadingProgress) {
-                              if (loadingProgress == null) return child;
-                              return Center(
-                                child: CircularProgressIndicator(
-                                  value: loadingProgress.expectedTotalBytes !=
-                                          null
-                                      ? loadingProgress.cumulativeBytesLoaded /
-                                          loadingProgress.expectedTotalBytes!
-                                      : null,
-                                ),
-                              );
-                            },
-                            errorBuilder: (context, error, stackTrace) {
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) => const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                            errorWidget: (context, url, error) {
                               debugPrint('Error loading product image: $error');
                               return const Icon(Icons.broken_image, size: 50);
                             },
@@ -640,7 +628,8 @@ class _HomeScreenState extends State<HomeScreen> {
           child: GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: 4, // Corrected to use displayProducts.length
+            itemCount: displayProducts
+                .length, // Corrected to use displayProducts.length
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               crossAxisSpacing: 12,
@@ -680,27 +669,22 @@ class _HomeScreenState extends State<HomeScreen> {
                       Center(
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(16),
-                          child: Image.network(
-                            imageUrl,
-                            height: 150,
-                            width: 150,
-                            fit: BoxFit.cover,
-                            loadingBuilder: (context, child, loadingProgress) {
-                              if (loadingProgress == null) return child;
-                              return Center(
-                                child: CircularProgressIndicator(
-                                  value: loadingProgress.expectedTotalBytes !=
-                                          null
-                                      ? loadingProgress.cumulativeBytesLoaded /
-                                          loadingProgress.expectedTotalBytes!
-                                      : null,
-                                ),
-                              );
-                            },
-                            errorBuilder: (context, error, stackTrace) {
-                              debugPrint('Error loading product image: $error');
-                              return const Icon(Icons.broken_image, size: 50);
-                            },
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(16),
+                            child: CachedNetworkImage(
+                              imageUrl: imageUrl,
+                              height: 150,
+                              width: 150,
+                              fit: BoxFit.cover,
+                              placeholder: (context, url) => const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                              errorWidget: (context, url, error) {
+                                debugPrint(
+                                    'Error loading product image: $error');
+                                return const Icon(Icons.broken_image, size: 50);
+                              },
+                            ),
                           ),
                         ),
                       ),
@@ -797,7 +781,8 @@ class _HomeScreenState extends State<HomeScreen> {
           child: GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: 4, // Corrected to use displayProducts.length
+            itemCount: displayProducts
+                .length, // Corrected to use displayProducts.length
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               crossAxisSpacing: 12,
@@ -837,27 +822,22 @@ class _HomeScreenState extends State<HomeScreen> {
                       Center(
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(16),
-                          child: Image.network(
-                            imageUrl,
-                            height: 150,
-                            width: 150,
-                            fit: BoxFit.cover,
-                            loadingBuilder: (context, child, loadingProgress) {
-                              if (loadingProgress == null) return child;
-                              return Center(
-                                child: CircularProgressIndicator(
-                                  value: loadingProgress.expectedTotalBytes !=
-                                          null
-                                      ? loadingProgress.cumulativeBytesLoaded /
-                                          loadingProgress.expectedTotalBytes!
-                                      : null,
-                                ),
-                              );
-                            },
-                            errorBuilder: (context, error, stackTrace) {
-                              debugPrint('Error loading product image: $error');
-                              return const Icon(Icons.broken_image, size: 50);
-                            },
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(16),
+                            child: CachedNetworkImage(
+                              imageUrl: imageUrl,
+                              height: 150,
+                              width: 150,
+                              fit: BoxFit.cover,
+                              placeholder: (context, url) => const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                              errorWidget: (context, url, error) {
+                                debugPrint(
+                                    'Error loading product image: $error');
+                                return const Icon(Icons.broken_image, size: 50);
+                              },
+                            ),
                           ),
                         ),
                       ),
