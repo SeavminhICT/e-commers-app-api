@@ -1,5 +1,7 @@
 import 'dart:convert';
-
+import 'package:provider/provider.dart';
+import 'langauge_data.dart';
+import 'langauge_logic.dart';
 import 'package:e_commers_app/service/storage_service.dart';
 import 'package:flutter/material.dart';
 
@@ -46,68 +48,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final languageData = context.watch<LanguageLogic>().language;
     return Scaffold(
-      appBar: _buildAppBar(),
-      body: _buildBody(),
-      bottomNavigationBar: _buildSaveButton(),
+      appBar: _buildAppBar(context, languageData),
+      body: _buildBody(context, languageData),
+      bottomNavigationBar: _buildSaveButton(context, languageData),
     );
   }
 
-  AppBar _buildAppBar() {
-    return AppBar(
-      backgroundColor: Colors.white,
-      elevation: 1,
-      centerTitle: true,
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back, color: Colors.black),
-        onPressed: () {
-          Navigator.of(context).pop();
-        },
-      ),
-      title: const Text(
-        'Edit Profile',
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          color: Colors.black,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildBody() {
-    final imageUrl = fixUrl(avatar);
-    return ListView(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-      children: [
-        Center(
-          child: CircleAvatar(
-              radius: 52,
-              backgroundImage: imageUrl != null && imageUrl!.isNotEmpty
-                  ? NetworkImage(imageUrl!) as ImageProvider
-                  : const AssetImage('images/profile.png'),
-            ),
-        ),
-        const SizedBox(height: 32),
-        _buildSectionTitle('Username'),
-        _buildTextField(
-          controller: _usernameController,
-          icon: Icons.person_outline,
-          hintText: 'Username',
-        ),
-        const SizedBox(height: 24),
-        _buildSectionTitle('Email or Phone Number'),
-        _buildTextField(
-          controller: _emailController,
-          icon: Icons.email_outlined,
-          hintText: 'Email or Phone Number',
-          keyboardType: TextInputType.emailAddress,
-        ),
-        const SizedBox(height: 24),
-        _buildSectionTitle('Account Liked With'),
-        _buildLinkedAccount(),
-      ],
-    );
-  }
+  // Removed duplicate _buildAppBar with no parameters.
 
   Widget _buildSectionTitle(String title) {
     return Text(
@@ -175,7 +124,66 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  Widget _buildSaveButton() {
+  // Removed duplicate _buildSaveButton with no parameters to resolve ambiguity.
+
+  // Corrected helper methods to accept languageData
+  AppBar _buildAppBar(BuildContext context, Language languageData) {
+    return AppBar(
+      backgroundColor: Colors.white,
+      elevation: 1,
+      centerTitle: true,
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back, color: Colors.black),
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+      ),
+      title: Text(
+        languageData.Edit_Profile, // Use translated string
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+          color: Colors.black,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBody(BuildContext context, Language languageData) {
+    final imageUrl = fixUrl(avatar);
+    return ListView(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+      children: [
+        Center(
+          child: CircleAvatar(
+              radius: 52,
+              backgroundImage: imageUrl != null && imageUrl!.isNotEmpty
+                  ? NetworkImage(imageUrl!) as ImageProvider
+                  : const AssetImage('images/profile.png'),
+            ),
+        ),
+        const SizedBox(height: 32),
+        _buildSectionTitle(languageData.Username), // Use translated string
+        _buildTextField(
+          controller: _usernameController,
+          icon: Icons.person_outline,
+          hintText: languageData.Username, // Use translated string
+        ),
+        const SizedBox(height: 24),
+        _buildSectionTitle(languageData.Email_or_Phone_Number), // Use translated string
+        _buildTextField(
+          controller: _emailController,
+          icon: Icons.email_outlined,
+          hintText: languageData.Email_or_Phone_Number, // Use translated string
+          keyboardType: TextInputType.emailAddress,
+        ),
+        const SizedBox(height: 24),
+        _buildSectionTitle(languageData.Account_Linked_With), // Use translated string
+        _buildLinkedAccount(), // This method doesn't use languageData directly, so no change needed here
+      ],
+    );
+  }
+
+  Widget _buildSaveButton(BuildContext context, Language languageData) {
     return Container(
       padding: const EdgeInsets.all(16),
       child: ElevatedButton(
@@ -189,9 +197,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ),
           minimumSize: const Size.fromHeight(48),
         ),
-        child: const Text(
-          'Save Changes',
-          style: TextStyle(
+        child: Text(
+          languageData.Save_Changes, // Use translated string
+          style: const TextStyle(
             fontSize: 16,
             color: Colors.white,
           ),

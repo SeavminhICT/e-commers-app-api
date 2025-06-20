@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart';
+import 'langauge_data.dart';
+import 'langauge_logic.dart';
 class NotificationsScreen extends StatefulWidget {
   const NotificationsScreen({super.key});
 
@@ -15,13 +17,14 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final languageData = context.watch<LanguageLogic>().language;
     return Scaffold(
-      appBar: _buildAppBar(),
-      body: _buildBody(),
+      appBar: _buildAppBar(context, languageData),
+      body: _buildBody(context, languageData),
     );
   }
 
-  AppBar _buildAppBar() {
+  AppBar _buildAppBar(BuildContext context, Language languageData) {
     return AppBar(
       backgroundColor: Colors.white,
       elevation: 1,
@@ -32,9 +35,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           Navigator.of(context).pop();
         },
       ),
-      title: const Text(
-        'Notifications',
-        style: TextStyle(
+      title: Text(
+        languageData.Notifications, // Use translated string
+        style: const TextStyle(
           fontWeight: FontWeight.bold,
           color: Colors.black,
         ),
@@ -48,7 +51,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     );
   }
 
-  Widget _buildBody() {
+  Widget _buildBody(BuildContext context, Language languageData) {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Container(
@@ -60,7 +63,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         child: Column(
           children: [
             SwitchListTile(
-              title: const Text('Payment'),
+              title: Text(languageData.Payment), // Use translated string
               value: _payment,
               onChanged: (val) {
                 setState(() {
@@ -70,7 +73,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             ),
             const Divider(height: 1),
             SwitchListTile(
-              title: const Text('Tracking'),
+              title: Text(languageData.Tracking), // Use translated string
               value: _tracking,
               onChanged: (val) {
                 setState(() {
@@ -80,7 +83,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             ),
             const Divider(height: 1),
             SwitchListTile(
-              title: const Text('Complete Order'),
+              title: Text(languageData.Complete_Order), // Use translated string
               value: _completeOrder,
               onChanged: (val) {
                 setState(() {
@@ -90,7 +93,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             ),
             const Divider(height: 1),
             SwitchListTile(
-              title: const Text('Notification'),
+              title: Text(languageData.Notifications), // Use translated string (reusing 'Notifications' key)
               value: _notification,
               onChanged: (val) {
                 setState(() {

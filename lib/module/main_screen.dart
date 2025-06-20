@@ -1,14 +1,14 @@
 import 'dart:convert';
 import 'package:e_commers_app/module/account_screen.dart';
 import 'package:e_commers_app/module/home_screen.dart';
-import 'package:e_commers_app/service/storage_service.dart';
-import 'package:e_commers_app/module/edit_profile_screen.dart';
-import 'package:e_commers_app/module/myFavScreen.dart';
-import 'package:e_commers_app/module/account_screen.dart';
-import 'package:e_commers_app/module/home_screen.dart';
+import 'package:e_commers_app/module/myFavScreen.dart'; // Contains MyScreen
 import 'package:e_commers_app/module/myorder_screen.dart';
+import 'package:e_commers_app/service/storage_service.dart';
 import 'package:e_commers_app/service/favorite_service.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'langauge_data.dart';
+import 'langauge_logic.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -50,25 +50,27 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final languageData = context.watch<LanguageLogic>().language;
+
     return Scaffold(
-      body: _buildBody(),
-      bottomNavigationBar: _buildNavigationBar(),
+      body: _buildBody(context), // Pass context if needed by children, not strictly necessary here
+      bottomNavigationBar: _buildNavigationBar(context, languageData),
     );
   }
 
-  Widget _buildBody() {
+  Widget _buildBody(BuildContext context) {
     return IndexedStack(
       index: _currentIndex,
       children: [
         const HomeScreen(),
-        const Center(child: Text('Order Page')),
-        const Center(child: Text('Order Page')),
+        const MyOrderScreen(),
+        MyScreen(favoriteProducts: favoriteProducts), // Pass the global favoriteProducts list
         const AccountScreen(),
       ],
     );
   }
 
-  Widget _buildNavigationBar() {
+  Widget _buildNavigationBar(BuildContext context, Language languageData) {
     final imageUrl = profileImage != null ? fixUrl(profileImage!) : null;
     return BottomNavigationBar(
       currentIndex: _currentIndex,
@@ -90,17 +92,17 @@ class _MainScreenState extends State<MainScreen> {
         });
       },
       items: [
-        const BottomNavigationBarItem(
-          icon: ImageIcon(AssetImage('images/Home_icon.png')),
-          label: 'HOME',
+        BottomNavigationBarItem(
+          icon: const ImageIcon(AssetImage('images/Home_icon.png')),
+          label: languageData.HOME, // Use translated string
         ),
         BottomNavigationBarItem(
           icon: ImageIcon(AssetImage('images/order_icon.png')),
-          label: 'MYORDER',
+          label: languageData.MYORDER, // Use translated string
         ),
         BottomNavigationBarItem(
           icon: ImageIcon(AssetImage('images/wishlist_icon.png')),
-          label: 'FAVORITE',
+          label: languageData.FAVORITE, 
         ),
         BottomNavigationBarItem(
           icon: CircleAvatar(
@@ -109,7 +111,7 @@ class _MainScreenState extends State<MainScreen> {
                 ? NetworkImage(imageUrl!)
                 : const AssetImage('images/profile.png') as ImageProvider,
           ),
-          label: 'ACCOUNT',
+          label: languageData.ACCOUNT, 
         ),
       ],
     );

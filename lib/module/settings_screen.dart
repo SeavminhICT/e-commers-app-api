@@ -7,9 +7,12 @@ import 'language_screen.dart';
 import 'legal_policies_screen.dart';
 import 'help_support_screen.dart';
 import 'logout_confirmation_dialog.dart';
+import 'package:provider/provider.dart';
+import 'langauge_data.dart';
+import 'langauge_logic.dart';
 
 class SettingsScreen extends StatelessWidget {
-  const SettingsScreen({super.key});
+  SettingsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,8 +21,12 @@ class SettingsScreen extends StatelessWidget {
       body: _buildBody(context),
     );
   }
+    Language _language = Language();
+  int _langIndex = 0;
 
   AppBar _buildAppBar(BuildContext context) {
+    _language = context.watch<LanguageLogic>().language;
+    _langIndex = context.watch<LanguageLogic>().langIndex;
     return AppBar(
       backgroundColor: Colors.white,
       elevation: 1,
@@ -30,9 +37,9 @@ class SettingsScreen extends StatelessWidget {
           Navigator.of(context).pop();
         },
       ),
-      title: const Text(
-        'Settings',
-        style: TextStyle(
+      title: Text(
+        _language.Settings, // Use translated string
+        style: const TextStyle(
           fontWeight: FontWeight.bold,
           color: Colors.black,
         ),
@@ -47,12 +54,14 @@ class SettingsScreen extends StatelessWidget {
   }
 
   Widget _buildBody(BuildContext context) {
+    _language = context.watch<LanguageLogic>().language;
+    _langIndex = context.watch<LanguageLogic>().langIndex;
     return ListView(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
       children: [
-        const Text(
-          'General',
-          style: TextStyle(
+        Text(
+          _language.General, // Use translated string
+          style: const TextStyle(
             fontWeight: FontWeight.w700,
             fontSize: 18,
           ),
@@ -61,37 +70,37 @@ class SettingsScreen extends StatelessWidget {
         _buildListItem(
           context,
           icon: Icons.person_outline,
-          label: 'Edit Profile',
+          label: _language.Edit_Profile, // Use translated string
           onTap: () {
             Navigator.of(context).push(
               MaterialPageRoute(builder: (context) => const EditProfileScreen()),
             );
           },
         ),
-        _buildListItem(
+        _buildListItem( // Use translated string
           context,
           icon: Icons.lock_outline,
-          label: 'Change Password',
+          label: _language.Change_Password,
           onTap: () {
             Navigator.of(context).push(
               MaterialPageRoute(builder: (context) => const ChangePasswordScreen()),
             );
           },
         ),
-        _buildListItem(
+        _buildListItem( // Use translated string
           context,
           icon: Icons.notifications_outlined,
-          label: 'Notifications',
+          label: _language.Notifications,
           onTap: () {
             Navigator.of(context).push(
               MaterialPageRoute(builder: (context) => const NotificationsScreen()),
             );
           },
         ),
-        _buildListItem(
+        _buildListItem( // Use translated string
           context,
           icon: Icons.security_outlined,
-          label: 'Security',
+          label: _language.Security, // Use translated string
           onTap: () {
             Navigator.of(context).push(
               MaterialPageRoute(builder: (context) => const SecurityScreen()),
@@ -101,10 +110,10 @@ class SettingsScreen extends StatelessWidget {
         _buildListItem(
           context,
           icon: Icons.language_outlined,
-          label: 'Language',
-          trailing: const Text(
-            'English',
-            style: TextStyle(color: Colors.grey),
+          label: _language.Language_Label, // Use translated string
+          trailing: Text(
+            _langIndex == 0 ? 'ខ្មែរ' : 'English',
+            style: const TextStyle(color: Colors.grey),
           ),
           onTap: () {
             Navigator.of(context).push(
@@ -113,9 +122,9 @@ class SettingsScreen extends StatelessWidget {
           },
         ),
         const SizedBox(height: 24),
-        const Text(
-          'Preferences',
-          style: TextStyle(
+        Text(
+          _language.Preferences, // Use translated string
+          style: const TextStyle(
             fontWeight: FontWeight.w700,
             fontSize: 18,
           ),
@@ -124,17 +133,17 @@ class SettingsScreen extends StatelessWidget {
         _buildListItem(
           context,
           icon: Icons.shield_outlined,
-          label: 'Legal and Policies',
+          label: _language.Legal_and_Policies, // Use translated string
           onTap: () {
             Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => const LegalPoliciesScreen()),
+              MaterialPageRoute(builder: (context) =>  LegalPoliciesScreen()),
             );
           },
         ),
-        _buildListItem(
+        _buildListItem( // Use translated string
           context,
           icon: Icons.help_outline,
-          label: 'Help & Support',
+          label: _language.Help_and_Support, // Use translated string
           onTap: () {
             Navigator.of(context).push(
               MaterialPageRoute(builder: (context) => const HelpSupportScreen()),
@@ -174,6 +183,8 @@ class SettingsScreen extends StatelessWidget {
   }
 
         _buildLogoutButton(BuildContext context) {
+    _language = context.watch<LanguageLogic>().language;
+    _langIndex = context.watch<LanguageLogic>().langIndex;
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -182,9 +193,9 @@ class SettingsScreen extends StatelessWidget {
       ),
       child: ListTile(
         leading: const Icon(Icons.logout, color: Colors.red),
-        title: const Text(
-          'Logout',
-          style: TextStyle(color: Colors.red),
+        title: Text(
+          _language.Logout, // Use translated string
+          style: const TextStyle(color: Colors.red),
         ),
         onTap: () {
           showDialog(

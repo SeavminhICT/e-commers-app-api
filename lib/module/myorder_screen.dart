@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:e_commers_app/module/api_service/api_myorder.dart';
 import 'package:e_commers_app/module/model/productmyorder_model.dart';
+import 'package:provider/provider.dart';
+import 'langauge_data.dart';
+import 'langauge_logic.dart';
 
 class MyOrderScreen extends StatefulWidget {
   const MyOrderScreen({Key? key}) : super(key: key);
@@ -25,9 +28,13 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
     final response = await api.getProductsmyorder();
     return response;
   }
+  Language _language = Language();
+  int _langIndex = 0;
 
   @override
   Widget build(BuildContext context) {
+    _language = context.watch<LanguageLogic>().language;
+    _langIndex = context.watch<LanguageLogic>().langIndex;
     return Column(
       children: [
         Container(
@@ -38,10 +45,10 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
             child: Stack(
               alignment: Alignment.center,
               children: [
-                const Center(
+                Center(
                   child: Text(
-                    'My Order',
-                    style: TextStyle(
+                    _language.My_Order, // Use translated string
+                    style: const TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 18,
                       color: Colors.black,
@@ -64,8 +71,8 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
           color: Colors.white,
           child: Row(
             children: [
-              _buildTabMyorder('My Order', 0),
-              _buildTabMyorder('History', 1),
+              _buildTabMyorder(_language.My_Order, 0),
+              _buildTabMyorder(_language.History, 1),
             ],
           ),
         ),
@@ -78,7 +85,7 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
               } else if (snapshot.hasError) {
                 return Center(child: Text('Error: ${snapshot.error}'));
               } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                return const Center(child: Text('No orders found.'));
+                return  Center(child: Text(_language.No_orders_found)); // Use translated string
               }
 
               final allProducts = snapshot.data!;
@@ -101,6 +108,8 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
   }
 
   Widget _buildTabMyorder(String title, int index) {
+    _language = context.watch<LanguageLogic>().language;
+    _langIndex = context.watch<LanguageLogic>().langIndex;
     return Expanded(
       child: GestureDetector(
         onTap: () => setState(() => selectedTab = index),
@@ -132,10 +141,15 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
 class OrderCard extends StatelessWidget {
   final ProductModel product; // Fixed type
 
-  const OrderCard({Key? key, required this.product}) : super(key: key);
+  OrderCard({Key? key, required this.product}) : super(key: key);
+    Language _language = Language();
+  int _langIndex = 0;
+
 
   @override
   Widget build(BuildContext context) {
+    _language = context.watch<LanguageLogic>().language;
+    _langIndex = context.watch<LanguageLogic>().langIndex;
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
@@ -221,7 +235,7 @@ class OrderCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Text(
-                      'On Progress',
+                      _language.On_Progress,
                       style: TextStyle(
                         fontSize: 10,
                         color: Colors.blue[600],
@@ -256,7 +270,7 @@ class OrderCard extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 12),
                   ),
                   child: Text(
-                    'Detail',
+                    _language.Detail, // Use translated string
                     style: TextStyle(
                       color: Colors.grey[700],
                       fontSize: 14,
@@ -277,8 +291,8 @@ class OrderCard extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     elevation: 0,
                   ),
-                  child: const Text(
-                    'Tracking',
+                  child:  Text(
+                    _language.Tracking,
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 14,
@@ -298,10 +312,14 @@ class OrderCard extends StatelessWidget {
 class HistoryCard extends StatelessWidget {
   final ProductModel product; // Fixed type
 
-  const HistoryCard({Key? key, required this.product}) : super(key: key);
+  HistoryCard({Key? key, required this.product}) : super(key: key);
+    Language _language = Language();
+  int _langIndex = 0;
 
   @override
   Widget build(BuildContext context) {
+    _language = context.watch<LanguageLogic>().language;
+    _langIndex = context.watch<LanguageLogic>().langIndex;
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
@@ -359,7 +377,7 @@ class HistoryCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      "Color: Black",
+                      _language.Color_B,
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.grey[600],
@@ -386,8 +404,8 @@ class HistoryCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(4),
                       border: Border.all(color: Colors.green),
                     ),
-                    child: const Text(
-                      'Completed',
+                    child:  Text(
+                      _language.Completed, // Use translated string
                       style: TextStyle(
                         fontSize: 10,
                         color: Colors.green,
@@ -422,7 +440,7 @@ class HistoryCard extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 12),
                   ),
                   child: Text(
-                    'Detail',
+                    _language.Detail,
                     style: TextStyle(
                       color: Colors.grey[700],
                       fontSize: 14,
@@ -443,8 +461,8 @@ class HistoryCard extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     elevation: 0,
                   ),
-                  child: const Text(
-                    'Received Order',
+                  child:  Text(
+                    _language.Received_Order,
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 14,

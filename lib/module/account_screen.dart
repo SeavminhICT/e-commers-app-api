@@ -2,6 +2,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:e_commers_app/service/storage_service.dart';
 import 'settings_screen.dart';
+import 'package:provider/provider.dart';
+import 'langauge_data.dart';
+import 'langauge_logic.dart';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({super.key});
@@ -40,6 +43,8 @@ class _AccountScreenState extends State<AccountScreen> {
       });
     }
   }
+  Language _language = Language();
+  int _langIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -51,13 +56,15 @@ class _AccountScreenState extends State<AccountScreen> {
   }
 
   AppBar _buildAppBar(BuildContext context) {
+    _language = context.watch<LanguageLogic>().language;
+    _langIndex = context.watch<LanguageLogic>().langIndex;
     return AppBar(
       backgroundColor: Colors.white,
       elevation: 2,
       centerTitle: true,
-      title: const Text(
-        'Account',
-        style: TextStyle(
+      title: Text(
+        _language.ACCOUNT, 
+        style: const TextStyle(
           fontWeight: FontWeight.bold,
           color: Colors.deepPurple,
           fontSize: 20,
@@ -68,7 +75,7 @@ class _AccountScreenState extends State<AccountScreen> {
           icon: const Icon(Icons.settings, color: Colors.deepPurple),
           onPressed: () {
             Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => const SettingsScreen()),
+              MaterialPageRoute(builder: (context) => SettingsScreen()),
             );
           },
         ),
@@ -77,6 +84,8 @@ class _AccountScreenState extends State<AccountScreen> {
   }
 
   Widget _buildBody(BuildContext context) {
+    _language = context.watch<LanguageLogic>().language;
+    _langIndex = context.watch<LanguageLogic>().langIndex;
     final imageUrl = fixUrl(avatar);
     return ListView(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
@@ -102,15 +111,12 @@ class _AccountScreenState extends State<AccountScreen> {
           ),
         ),
         const SizedBox(height: 12),
-        // Removed Edit Profile button as per user request
         const SizedBox(height: 36),
-        // _buildSectionTitle('Username'),
         _buildReadOnlyField(username, Icons.person_outline),
         const SizedBox(height: 28),
-        // _buildSectionTitle('Email or Phone Number'),
         _buildReadOnlyField(emailOrPhone, Icons.email_outlined),
         const SizedBox(height: 28),
-        _buildSectionTitle('Account Linked With'),
+        _buildSectionTitle(_language.Account_Linked_With),
         _buildLinkedAccount(),
       ],
     );

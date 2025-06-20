@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart';
+import 'langauge_data.dart';
+import 'langauge_logic.dart';
 class ChangePasswordScreen extends StatefulWidget {
   const ChangePasswordScreen({super.key});
 
@@ -22,8 +24,12 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       bottomNavigationBar: _buildChangeButton(),
     );
   }
+  Language _language = Language();
+  int _langIndex = 0;
 
   AppBar _buildAppBar() {
+    _language = context.watch<LanguageLogic>().language;
+    _langIndex = context.watch<LanguageLogic>().langIndex;
     return AppBar(
       backgroundColor: Colors.white,
       elevation: 1,
@@ -34,9 +40,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           Navigator.of(context).pop();
         },
       ),
-      title: const Text(
-        'Change Password',
-        style: TextStyle(
+      title: Text(
+        _language.Change_Password, // Use translated string
+        style: const TextStyle(
           fontWeight: FontWeight.bold,
           color: Colors.black,
         ),
@@ -51,10 +57,12 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   }
 
   Widget _buildBody() {
+    _language = context.watch<LanguageLogic>().language;
+    _langIndex = context.watch<LanguageLogic>().langIndex;
     return ListView(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
       children: [
-        _buildSectionTitle('New Password'),
+        _buildSectionTitle(_language.New_Password), // Use translated string
         _buildPasswordField(
           controller: _newPasswordController,
           obscureText: _obscureNewPassword,
@@ -63,10 +71,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               _obscureNewPassword = !_obscureNewPassword;
             });
           },
-          hintText: 'Enter new password',
+          hintText: _language.Enter_new_password, // Use translated string
         ),
         const SizedBox(height: 24),
-        _buildSectionTitle('Confirm Password'),
+        _buildSectionTitle(_language.Confirm_Password), // Use translated string
         _buildPasswordField(
           controller: _confirmPasswordController,
           obscureText: _obscureConfirmPassword,
@@ -75,7 +83,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               _obscureConfirmPassword = !_obscureConfirmPassword;
             });
           },
-          hintText: 'Confirm your new password',
+          hintText: _language.Confirm_your_new_password, // Use translated string
         ),
       ],
     );
@@ -124,11 +132,12 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   }
 
   Widget _buildChangeButton() {
+    _language = context.watch<LanguageLogic>().language;
+    _langIndex = context.watch<LanguageLogic>().langIndex;
     return Container(
       padding: const EdgeInsets.all(16),
       child: ElevatedButton(
         onPressed: () {
-          // Change password logic here
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.deepPurple,
@@ -137,9 +146,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           ),
           minimumSize: const Size.fromHeight(48),
         ),
-        child: const Text(
-          'Change Now',
-          style: TextStyle(fontSize: 16),
+        child: Text(
+          _language.Change_Now, // Use translated string
+          style: const TextStyle(fontSize: 16),
         ),
       ),
     );

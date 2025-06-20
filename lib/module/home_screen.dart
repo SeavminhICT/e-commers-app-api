@@ -7,6 +7,9 @@ import 'api_service/api_service.dart';
 import 'model/category_model.dart';
 import 'model/product_model.dart';
 import 'products_detail_screen.dart';
+import 'package:provider/provider.dart';
+import 'langauge_data.dart';
+import 'langauge_logic.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -107,13 +110,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final languageData = context.watch<LanguageLogic>().language;
     return Scaffold(
-      appBar: _buildAppBar(),
-      body: _buildBody(),
+      appBar: _buildAppBar(context, languageData),
+      body: _buildBody(context, languageData),
     );
   }
 
-  PreferredSize _buildAppBar() {
+  PreferredSize _buildAppBar(BuildContext context, Language languageData) {
     return PreferredSize(
       preferredSize: const Size.fromHeight(kToolbarHeight),
       child: Container(
@@ -130,9 +134,9 @@ class _HomeScreenState extends State<HomeScreen> {
           backgroundColor: Colors.white,
           elevation: 0,
           centerTitle: true,
-          title: const Text(
-            'Mega Mall',
-            style: TextStyle(
+          title: Text(
+            languageData.Mega_Mall, // Use translated string
+            style: const TextStyle(
               fontWeight: FontWeight.bold,
               color: Colors.blue,
             ),
@@ -160,7 +164,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildBody() {
+  Widget _buildBody(BuildContext context, Language languageData) {
     return RefreshIndicator(
       onRefresh: () async {
         reloadData();
@@ -171,9 +175,9 @@ class _HomeScreenState extends State<HomeScreen> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
+            return Center(child: Text('${languageData.Error} ${snapshot.error}')); // Use translated string
           } else if (!snapshot.hasData) {
-            return const Center(child: Text('No data found.'));
+            return Center(child: Text(languageData.No_data_found)); // Use translated string
           }
           final categories = snapshot.data!['categories'] as CategoryModel;
           final allCategory = categories.categories;
@@ -192,11 +196,11 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _build_search(),
-                buildAutoSlideShow(),
-                _buildCategory(allCategory, productsModel.categories),
+                _build_search(context, languageData),
+                buildAutoSlideShow(context, languageData), // Pass languageData if needed for future strings
+                _buildCategory(context, languageData, allCategory, productsModel.categories),
                 const SizedBox(height: 16),
-                _buildMainProduct(allProducts),
+                _buildMainProduct(context, languageData, allProducts),
               ],
             ),
           );
@@ -204,8 +208,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-
-  Widget _build_search() {
+  Widget _build_search(BuildContext context, Language languageData) {
     return Container(
       color: Colors.white,
       child: Padding(
@@ -225,11 +228,11 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ],
           ),
-          child: const TextField(
+          child: TextField(
             decoration: InputDecoration(
-              hintText: 'Search Product Name',
-              hintStyle: TextStyle(color: Color(0xFFC4C5C4)),
-              border: InputBorder.none,
+              hintText: languageData.Search_Product_Name, // Use translated string
+              hintStyle: const TextStyle(color: Color(0xFFC4C5C4)),
+              border: InputBorder.none, // Use translated string
               contentPadding:
                   EdgeInsets.symmetric(vertical: 14), // <== add this line
               suffixIcon: Icon(
@@ -243,7 +246,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget buildAutoSlideShow() {
+  Widget buildAutoSlideShow(BuildContext context, Language languageData) {
     return Container(
       color: Colors.white,
       child: Padding(
@@ -270,12 +273,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       frameBuilder:
                           (context, child, frame, wasSynchronouslyLoaded) {
                         if (wasSynchronouslyLoaded) return child;
-                        return Center(
+                        return const Center(
                           child: CircularProgressIndicator(),
                         );
                       },
                       errorBuilder: (context, error, stackTrace) {
-                        debugPrint('Error loading asset image: $error');
+                        debugPrint('${languageData.Error_loading} $error'); // Use translated string
                         return const Icon(Icons.broken_image, size: 50);
                       },
                     ),
@@ -305,10 +308,9 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildCategory(
-      List<Category_main> categories, List<Category> productCategories) {
+  Widget _buildCategory(BuildContext context, Language languageData, List<Category_main> categories, List<Category> productCategories) {
     if (categories.isEmpty) {
-      return const Center(child: Text('No categories found.'));
+      return Center(child: Text(languageData.No_categories_found)); // Use translated string
     }
 
     return Container(
@@ -320,10 +322,10 @@ class _HomeScreenState extends State<HomeScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 18.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const [
+              children: [
                 Text(
-                  'Categories',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  languageData.Categories, // Use translated string
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ],
             ),
@@ -386,8 +388,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 );
                               },
                               errorBuilder: (context, error, stackTrace) {
-                                debugPrint(
-                                    'Error loading category image: $error');
+                                debugPrint('${languageData.Error_Cate} $error'); // Use translated string
                                 return const Icon(Icons.broken_image, size: 40);
                               },
                             ),
@@ -416,24 +417,23 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildMainProduct(List<Product> products) {
+  Widget _buildMainProduct(BuildContext context, Language languageData, List<Product> products) {
     return Column(
       children: [
-        buildFeaturedProduct(products),
+        buildFeaturedProduct(context, languageData, products),
         const SizedBox(height: 8),
-        buildBestSellers(products),
+        buildBestSellers(context, languageData, products),
         const SizedBox(height: 8),
-        buildTopRatedProduct(products),
+        buildTopRatedProduct(context, languageData, products),
         const SizedBox(height: 16),
       ],
     );
   }
 
-  Widget buildFeaturedProduct(List<Product> products) {
+  Widget buildFeaturedProduct(BuildContext context, Language languageData, List<Product> products) {
     if (products.isEmpty) {
       return const Center(child: Text('No products found.'));
     }
-    // Limit to the first 2 products for the "Featured Product" section
     final displayProducts = products.take(2).toList();
 
     return Column(
@@ -444,9 +444,9 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'All Product',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              Text(
+                languageData.All_Product, 
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               InkWell(
                 onTap: () {
@@ -457,9 +457,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   );
                 },
-                child: const Text(
-                  'See All',
-                  style: TextStyle(color: Colors.blue),
+                child: Text(
+                  languageData.See_All, 
+                  style: const TextStyle(color: Colors.blue),
                 ),
               ),
             ],
@@ -471,8 +471,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: displayProducts
-                .length, // Corrected to use displayProducts.length
+            itemCount: displayProducts.length, 
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               crossAxisSpacing: 12,
@@ -521,7 +520,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               child: CircularProgressIndicator(),
                             ),
                             errorWidget: (context, url, error) {
-                              debugPrint('Error loading product image: $error');
+                              debugPrint('${languageData.Error_loadi} $error'); 
                               return const Icon(Icons.broken_image, size: 50);
                             },
                           ),
@@ -574,14 +573,13 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget buildBestSellers(List<Product> products) {
+  Widget buildBestSellers(BuildContext context, Language languageData, List<Product> products) {
     if (products.isEmpty) {
-      return const Center(child: Text('No products found.'));
+      return Center(child: Text(languageData.No_products_found)); // Use translated string
     }
     final lowPriceProducts = List<Product>.from(products)
       ..sort((a, b) => double.parse(a.price).compareTo(double.parse(b.price)));
 
-    // Limit to the first 2 products for the "Best Sellers" section
     final displayProducts = lowPriceProducts.take(2).toList();
 
     return Column(
@@ -592,9 +590,9 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Best Sellers',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              Text(
+                languageData.Best_Sellers, 
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               InkWell(
                 onTap: () {
@@ -606,9 +604,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   );
                 },
-                child: const Text(
-                  'See All',
-                  style: TextStyle(color: Colors.blue),
+                child: Text(
+                  languageData.See_All,
+                  style: const TextStyle(color: Colors.blue),
                 ),
               ),
             ],
@@ -621,7 +619,7 @@ class _HomeScreenState extends State<HomeScreen> {
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: displayProducts
-                .length, // Corrected to use displayProducts.length
+                .length, 
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               crossAxisSpacing: 12,
@@ -672,8 +670,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: CircularProgressIndicator(),
                               ),
                               errorWidget: (context, url, error) {
-                                debugPrint(
-                                    'Error loading product image: $error');
+                                debugPrint('${languageData.Error_loadi} $error'); 
                                 return const Icon(Icons.broken_image, size: 50);
                               },
                             ),
@@ -727,14 +724,13 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget buildTopRatedProduct(List<Product> products) {
+  Widget buildTopRatedProduct(BuildContext context, Language languageData, List<Product> products) {
     if (products.isEmpty) {
-      return const Center(child: Text('No products found.'));
+      return Center(child: Text(languageData.No_products_found)); 
     }
     final topRatedProducts = List<Product>.from(products)
       ..sort((a, b) => b.rating.compareTo(a.rating));
 
-    // Limit to the first 2 products for the "Top Rated Products" section
     final displayProducts = topRatedProducts.take(2).toList();
 
     return Column(
@@ -745,9 +741,9 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Top Rated Products',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              Text(
+                languageData.Top_Rated_Products, // Use translated string
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               InkWell(
                 onTap: () {
@@ -759,9 +755,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   );
                 },
-                child: const Text(
-                  'See All',
-                  style: TextStyle(color: Colors.blue),
+                child: Text(
+                  languageData.See_All,
+                  style: const TextStyle(color: Colors.blue),
                 ),
               ),
             ],
@@ -773,8 +769,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: displayProducts
-                .length, // Corrected to use displayProducts.length
+            itemCount: displayProducts.length, 
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               crossAxisSpacing: 12,
@@ -825,8 +820,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: CircularProgressIndicator(),
                               ),
                               errorWidget: (context, url, error) {
-                                debugPrint(
-                                    'Error loading product image: $error');
+                                debugPrint('${languageData.Error_loadi} $error');
                                 return const Icon(Icons.broken_image, size: 50);
                               },
                             ),

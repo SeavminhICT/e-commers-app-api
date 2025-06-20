@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'langauge_data.dart';
+import 'langauge_logic.dart';
 
 class SecurityScreen extends StatefulWidget {
   const SecurityScreen({super.key});
@@ -14,13 +17,14 @@ class _SecurityScreenState extends State<SecurityScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final languageData = context.watch<LanguageLogic>().language;
     return Scaffold(
-      appBar: _buildAppBar(),
-      body: _buildBody(),
+      appBar: _buildAppBar(context, languageData),
+      body: _buildBody(context, languageData),
     );
   }
 
-  AppBar _buildAppBar() {
+  AppBar _buildAppBar(BuildContext context, Language languageData) {
     return AppBar(
       backgroundColor: Colors.white,
       elevation: 1,
@@ -31,9 +35,9 @@ class _SecurityScreenState extends State<SecurityScreen> {
           Navigator.of(context).pop();
         },
       ),
-      title: const Text(
-        'Security',
-        style: TextStyle(
+      title: Text(
+        languageData.Security, // Use translated string
+        style: const TextStyle(
           fontWeight: FontWeight.bold,
           color: Colors.black,
         ),
@@ -47,7 +51,7 @@ class _SecurityScreenState extends State<SecurityScreen> {
     );
   }
 
-  Widget _buildBody() {
+  Widget _buildBody(BuildContext context, Language languageData) {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Container(
@@ -59,7 +63,7 @@ class _SecurityScreenState extends State<SecurityScreen> {
         child: Column(
           children: [
             SwitchListTile(
-              title: const Text('Face ID'),
+              title: Text(languageData.Face_ID), // Use translated string
               value: _faceId,
               onChanged: (val) {
                 setState(() {
@@ -69,7 +73,7 @@ class _SecurityScreenState extends State<SecurityScreen> {
             ),
             const Divider(height: 1),
             SwitchListTile(
-              title: const Text('Remember Password'),
+              title: Text(languageData.Remember_Password), // Use translated string
               value: _rememberPassword,
               onChanged: (val) {
                 setState(() {
@@ -79,7 +83,7 @@ class _SecurityScreenState extends State<SecurityScreen> {
             ),
             const Divider(height: 1),
             SwitchListTile(
-              title: const Text('Touch ID'),
+              title: Text(languageData.Touch_ID), // Use translated string
               value: _touchId,
               onChanged: (val) {
                 setState(() {

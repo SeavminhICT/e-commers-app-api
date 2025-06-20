@@ -1,11 +1,14 @@
 import 'package:e_commers_app/constant/constants.dart';
 import 'package:e_commers_app/module/model/products_detail_model.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'langauge_data.dart';
+import 'langauge_logic.dart';
 
 class MyScreen extends StatelessWidget {
   final List<ProductsDetailModel> favoriteProducts;
 
-  const MyScreen({Key? key, required this.favoriteProducts}) : super(key: key);
+  MyScreen({Key? key, required this.favoriteProducts}) : super(key: key);
   String fixUrl(String url) {
     if (url.startsWith('https://')) {
       return url.replaceFirst('https://', 'http://');
@@ -15,10 +18,11 @@ class MyScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final languageData = context.watch<LanguageLogic>().language;
     return Scaffold(
-      appBar: AppBar(title: const Text('My Favorites')),
+      appBar: AppBar(title: Text(languageData.My_Favorite)), // Use translated string
       body: favoriteProducts.isEmpty
-          ? const Center(child: Text('No favorite products yet.'))
+          ? Center(child: Text(languageData.No_favorite_p)) // Use translated string
           : ListView.builder(
               itemCount: favoriteProducts.length,
               itemBuilder: (context, index) {

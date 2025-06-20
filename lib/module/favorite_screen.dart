@@ -2,6 +2,9 @@ import 'package:e_commers_app/module/fav_noti_screen.dart';
 import 'package:e_commers_app/module/model/productfav_model.dart';
 import 'package:flutter/material.dart';
 import 'package:e_commers_app/module/api_service/api_fav.dart';
+import 'package:provider/provider.dart';
+import 'langauge_data.dart';
+import 'langauge_logic.dart';
 
 class MyFavScreen extends StatefulWidget {
   const MyFavScreen({Key? key}) : super(key: key);
@@ -31,7 +34,6 @@ class _MyFavScreenState extends State<MyFavScreen> {
   @override
   void initState() {
     super.initState();
-    // Initialize empty list and load products
     filteredProducts = [];
     loadFavorites();
   }
@@ -44,7 +46,7 @@ class _MyFavScreenState extends State<MyFavScreen> {
       });
 
       final fetchedProducts =
-          await apiFav.getProductfav(); // <-- call from ApiFav
+          await apiFav.getProductfav(); 
 
       setState(() {
         products = fetchedProducts;
@@ -105,8 +107,10 @@ class _MyFavScreenState extends State<MyFavScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final languageData = context.watch<LanguageLogic>().language;
     return Scaffold(
       appBar: AppBar(
+
         title: const Text(
           'My Favorite',
           style: TextStyle(
@@ -126,7 +130,7 @@ class _MyFavScreenState extends State<MyFavScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const NotificationScreen(),
+                  builder: (context) => NotificationScreen(),
                 ),
               );
             },
@@ -147,8 +151,8 @@ class _MyFavScreenState extends State<MyFavScreen> {
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
-          children: [
-            _buildSearchBar(),
+            children: [
+            _buildSearchBar(context, languageData),
             const SizedBox(height: 20),
             _buildFilterTabs(),
             const SizedBox(height: 20),
@@ -159,7 +163,7 @@ class _MyFavScreenState extends State<MyFavScreen> {
     );
   }
 
-  Widget _buildSearchBar() {
+  Widget _buildSearchBar(BuildContext context, Language languageData) {
     return Container(
       height: 50,
       decoration: BoxDecoration(
@@ -204,7 +208,7 @@ class _MyFavScreenState extends State<MyFavScreen> {
           Expanded(
             child: TextField(
               controller: _searchController,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 hintText: 'Search something...',
                 hintStyle: TextStyle(color: Colors.grey),
                 border: InputBorder.none,
@@ -305,6 +309,7 @@ class _MyFavScreenState extends State<MyFavScreen> {
   }
 
   Widget _buildFilterTabs() {
+
     return SizedBox(
       height: 40,
       child: ListView.builder(
@@ -357,6 +362,7 @@ class _MyFavScreenState extends State<MyFavScreen> {
   }
 
   Widget _buildContent() {
+
     if (isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
