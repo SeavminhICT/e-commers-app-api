@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'dart:io';
+import 'package:dio/src/response.dart';
 import 'package:e_commers_app/data/model/provider/api_provider.dart';
 import 'package:faker/faker.dart';
 import 'package:flutter/cupertino.dart';
@@ -40,15 +42,21 @@ class RegisterController extends GetxController {
   //   confirmPasswordController.text = "12345678";
   // }
 
-  void register(
-      {required String name,
-      required String email,
-      required String password}) async {
+  void register({
+    required String name,
+    required String email,
+    required String password,
+  }) async {
     try {
       final response = await _provider.register(
-          name: name, email: email, password: password, image: profileImg);
+        name: name,
+        email: email,
+        password: password,
+        image: profileImg,
+      );
+
       if (response.statusCode == 200) {
-        // success
+        // Success dialog
         Get.dialog(
           Dialog(
             shape:
@@ -61,16 +69,13 @@ class RegisterController extends GetxController {
                 children: [
                   Icon(Icons.check_circle, color: Colors.green, size: 60),
                   SizedBox(height: 16),
-                  Text(
-                    'Success',
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                  ),
+                  Text('Success',
+                      style:
+                          TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
                   SizedBox(height: 12),
-                  Text(
-                    'Registration successful',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 16, color: Colors.black54),
-                  ),
+                  Text('Registration successful',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 16, color: Colors.black54)),
                   SizedBox(height: 24),
                   SizedBox(
                     width: double.infinity,
@@ -78,8 +83,7 @@ class RegisterController extends GetxController {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.orange,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
+                            borderRadius: BorderRadius.circular(10)),
                       ),
                       onPressed: () {
                         Get.back(); // Close dialog
@@ -96,9 +100,19 @@ class RegisterController extends GetxController {
             ),
           ),
         );
+      } else if (response.statusCode == 422) {
+        // Email already exists
+        final responseBody = response.data;
+        if (responseBody['errors']?['email'] != null) {
+          Get.snackbar('Error', responseBody['errors']['email'][0]);
+        }
+      } else if (response.statusCode == 200) {
+        // Registration success logic
+      } else {
+        Get.snackbar('Error', 'Something went wrong');
       }
     } catch (e) {
-      Get.defaultDialog(title: "Error", content: Text("${e.toString()}"));
+      Get.defaultDialog(title: "Error", content: Text(e.toString()));
     }
   }
 }

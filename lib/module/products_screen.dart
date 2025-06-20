@@ -88,12 +88,12 @@ class ProductsScreen extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius:
-                const BorderRadius.vertical(top: Radius.circular(12)),
+                    const BorderRadius.vertical(top: Radius.circular(12)),
                 child: Image.network(
                   imageUrl,
-                  height: 170,
+                  height: double.infinity,
                   width: double.infinity,
-                  fit: BoxFit.cover,
+                  fit: BoxFit.contain,
                 ),
               ),
               const Positioned(

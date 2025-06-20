@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:e_commers_app/module/account_screen.dart';
+import 'package:e_commers_app/module/cartview.dart';
 import 'package:e_commers_app/module/home_screen.dart';
 import 'package:e_commers_app/service/storage_service.dart';
 import 'package:e_commers_app/module/edit_profile_screen.dart';
@@ -61,7 +62,7 @@ class _MainScreenState extends State<MainScreen> {
       index: _currentIndex,
       children: [
         const HomeScreen(),
-        const Center(child: Text('Order Page')),
+        const CartScreen(),
         const Center(child: Text('Order Page')),
         const AccountScreen(),
       ],
