@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -64,7 +65,7 @@ class ApiProvider {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
             'Authorization':
-            'Bearer ${await StorageService.read(key: 'token')}',
+                'Bearer ${await StorageService.read(key: 'token')}',
           },
         ),
       );
@@ -75,8 +76,8 @@ class ApiProvider {
 
   Future<Response> addToCart(
       {required int productId,
-        required int quantity,
-        required num price}) async {
+      required int quantity,
+      required num price}) async {
     try {
       return await _dio.post(
         '/cart',
@@ -90,7 +91,7 @@ class ApiProvider {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
             'Authorization':
-            'Bearer ${await StorageService.read(key: 'token')}',
+                'Bearer ${await StorageService.read(key: 'token')}',
           },
         ),
       );
