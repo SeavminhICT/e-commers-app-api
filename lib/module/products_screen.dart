@@ -95,9 +95,9 @@ class ProductsScreen extends StatelessWidget {
                     const BorderRadius.vertical(top: Radius.circular(12)),
                 child: Image.network(
                   imageUrl,
-                  height: double.infinity,
+                  height: 170,
                   width: double.infinity,
-                  fit: BoxFit.contain,
+                  fit: BoxFit.cover,
                 ),
               ),
               const Positioned(

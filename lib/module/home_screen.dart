@@ -443,7 +443,7 @@ class _HomeScreenState extends State<HomeScreen> {
       return const Center(child: Text('No products found.'));
     }
     // Limit to the first 2 products for the "Featured Product" section
-    final displayProducts = products.take(6).toList();
+    final displayProducts = products.take(4).toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
