@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart';
+import 'langauge_data.dart';
+import 'langauge_logic.dart';
 class LogoutConfirmationDialog extends StatelessWidget {
   final VoidCallback onLogout;
   final VoidCallback onCancel;
 
-  const LogoutConfirmationDialog({
+  LogoutConfirmationDialog({
     super.key,
     required this.onLogout,
     required this.onCancel,
@@ -12,6 +14,7 @@ class LogoutConfirmationDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final languageData = context.watch<LanguageLogic>().language;
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
@@ -19,8 +22,8 @@ class LogoutConfirmationDialog extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
-              'Are you sure you want to logout?',
+            Text(
+              languageData.Are_you,
               style: TextStyle(fontSize: 16),
               textAlign: TextAlign.center,
             ),
@@ -34,7 +37,7 @@ class LogoutConfirmationDialog extends StatelessWidget {
                 ),
                 minimumSize: const Size.fromHeight(48),
               ),
-              child: const Text('Cancel',
+              child: Text(languageData.Cancel, // Use translated string
               style: TextStyle(fontSize: 16,color: Colors.white,),
               textAlign: TextAlign.center,
               ),
@@ -42,8 +45,8 @@ class LogoutConfirmationDialog extends StatelessWidget {
             const SizedBox(height: 12),
             GestureDetector(
               onTap: onLogout,
-              child: const Text(
-                'Log Out',
+              child: Text(
+                languageData.Log_Out, // Use translated string
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.red,

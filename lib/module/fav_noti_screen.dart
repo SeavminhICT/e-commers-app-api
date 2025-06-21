@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'langauge_data.dart';
+import 'langauge_logic.dart';
 
 class NotificationScreen extends StatelessWidget {
-  const NotificationScreen({Key? key}) : super(key: key);
+  NotificationScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final languageData = context.watch<LanguageLogic>().language;
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
-          'Notification',
-          style: TextStyle(
+        title: Text(
+          languageData.Notifications, // Use translated string
+          style: const TextStyle(
             color: Colors.black,
             fontSize: 16,
             fontWeight: FontWeight.w600,
@@ -33,11 +38,11 @@ class NotificationScreen extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(
-            padding: EdgeInsets.all(16.0),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
             child: Text(
-              'Recent',
-              style: TextStyle(
+              languageData.Recents, // Use translated string
+              style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w600,
               ),
@@ -46,10 +51,10 @@ class NotificationScreen extends StatelessWidget {
           Expanded(
             child: ListView(
               children: [
-                _buildNotificationItem(
+                _buildNotificationItem(context, languageData,
                   icon: Icons.shopping_cart_outlined,
-                  title: 'Purchase Completed!',
-                  message: 'You have successfully purchased J34 headphones, thank you and wait for your package to arrive✨',
+                  title: languageData.Purchase_Completed, // Use translated string
+                  message: languageData.Purchase_Message, // Use translated string
                   time: '2m ago',
                   ),
                   Divider(
@@ -59,10 +64,10 @@ class NotificationScreen extends StatelessWidget {
                   indent: 16,
                   endIndent: 16,
                   ),
-                _buildNotificationItem(
+                _buildNotificationItem(context, languageData,
                   icon: Icons.local_fire_department,
-                  title: 'Flash Sale!',
-                  message: 'Get 20% discount for first transaction in this month!🤩',
+                  title: languageData.Flash_Sale, // Use translated string
+                  message: languageData.Flash_Sale_Message, // Use translated string
                   time: '2m ago',
                   ),
                   Divider(
@@ -72,16 +77,16 @@ class NotificationScreen extends StatelessWidget {
                   indent: 16,
                   endIndent: 16,
                   ),
-                _buildNotificationItem(
+                _buildNotificationItem(context, languageData,
                   icon: Icons.local_shipping_outlined,
-                  title: 'Package Sent',
-                  message: 'Hi your package has been sent from new york',
+                  title: languageData.Package_Sent, // Use translated string
+                  message: languageData.Package_Sent_Message, // Use translated string
                   time: '10m ago',
                   ),
-                _buildNotificationItem(
+                _buildNotificationItem(context, languageData,
                   icon: Icons.wallet_giftcard,
-                  title: 'Loyalty Rewards!',
-                  message: 'You\'ve earned 500 points from your last purchase 🎁',
+                  title: languageData.Loyalty_Rewards, // Use translated string
+                  message: languageData.Loyalty_Rewards_Message, // Use translated string
                   time: '30m ago',
                 ),
                 Divider(
@@ -91,10 +96,10 @@ class NotificationScreen extends StatelessWidget {
                   indent: 16,
                   endIndent: 16,
                 ),
-                _buildNotificationItem(
+                _buildNotificationItem(context, languageData,
                   icon: Icons.event_available,
-                  title: 'Limited Time Event',
-                  message: 'Join our tech workshop this weekend - Free registration! 📱',
+                  title: languageData.Limited_Time_Event, // Use translated string
+                  message: languageData.Limited_Time_Event_Message, // Use translated string
                   time: '1h ago',
                 ),
                 Divider(
@@ -104,18 +109,24 @@ class NotificationScreen extends StatelessWidget {
                   indent: 16,
                   endIndent: 16,
                 ),
-                _buildNotificationItem(
-                  icon: Icons.message_outlined,
+                _buildNotificationItem(context, languageData,
                   isMessage: true,
-                  title: 'Customer Support',
-                  message: 'Hi, how can we assist you today? 😊',
+                  title: languageData.Customer_Support, // Use translated string
+                  message: languageData.Customer_Support_Message, // Use translated string
                   time: '2h ago',
                   hasReply: true,
                 ),
-                _buildNotificationItem(
+                Divider(
+                  color: Colors.grey[300],
+                  thickness: 1,
+                  height: 1,
+                  indent: 16,
+                  endIndent: 16,
+                ),
+                _buildNotificationItem(context, languageData,
                   icon: Icons.update,
-                  title: 'App Update Available',
-                  message: 'Version 2.0 is now available with exciting new features! 🚀',
+                  title: languageData.App_Update_Available, // Use translated string
+                  message: languageData.App_Update_Message, // Use translated string
                   time: '3h ago',
                 ),
                 Divider(
@@ -125,10 +136,10 @@ class NotificationScreen extends StatelessWidget {
                   indent: 16,
                   endIndent: 16,
                 ),
-                _buildNotificationItem(
+                _buildNotificationItem(context, languageData,
                   icon: Icons.thumb_up_outlined,
-                  title: 'Review Request',
-                  message: 'Love our app? Rate us on the App Store! ⭐',
+                  title: languageData.Review_Request, // Use translated string
+                  message: languageData.Review_Request_Message, // Use translated string
                   time: '4h ago',
                 ),
                 Divider(
@@ -138,10 +149,10 @@ class NotificationScreen extends StatelessWidget {
                   indent: 16,
                   endIndent: 16,
                 ),
-                _buildNotificationItem(
+                _buildNotificationItem(context, languageData,
                   icon: Icons.back_hand,
-                  title: 'Welcome Back!',
-                  message: 'We missed you! Check out what\'s new in our store 👋',
+                  title: languageData.Welcome_Back, // Use translated string
+                  message: languageData.Welcome_Back_Message, // Use translated string
                   time: '5h ago',
                 ),
             ],
@@ -152,7 +163,7 @@ class NotificationScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildNotificationItem({
+  Widget _buildNotificationItem(BuildContext context, Language languageData, {
     IconData? icon,
     bool isMessage = false,
     required String title,
@@ -217,8 +228,8 @@ class NotificationScreen extends StatelessWidget {
                 if (hasReply) ...[
                   const SizedBox(height: 8),
                   Text(
-                    'Reply the message',
-                    style: TextStyle(
+                    languageData.Reply_the_message, // Use translated string
+                    style:  TextStyle(
                       color: Colors.blue[700],
                       fontSize: 13,
                       fontWeight: FontWeight.w500,

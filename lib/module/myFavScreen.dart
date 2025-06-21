@@ -1,7 +1,9 @@
 import 'package:e_commers_app/constant/constants.dart';
 import 'package:e_commers_app/module/fav_noti_screen.dart';
+import 'package:e_commers_app/module/langauge_logic.dart';
 import 'package:e_commers_app/module/model/products_detail_model.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 enum SortOption {
   priceHighToLow,
   priceLowToHigh,
@@ -84,6 +86,7 @@ void sortProducts(SortOption option) {
 }
   @override
   Widget build(BuildContext context) {
+    final languageData = context.watch<LanguageLogic>().language;
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -105,7 +108,7 @@ void sortProducts(SortOption option) {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const NotificationScreen(),
+                  builder: (context) =>  NotificationScreen(),
                 ),
               );
             },
@@ -211,7 +214,8 @@ void sortProducts(SortOption option) {
  Widget _buildFilter(String label) {
   bool isSelected = selectedFilter == label;
   return Container(
-    margin: const EdgeInsets.only(right: 8),
+    margin: const EdgeInsets.only(right: 6),
+    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
     child: ChoiceChip(
       label: Text(
         label,
@@ -229,9 +233,11 @@ void sortProducts(SortOption option) {
                 filteredProducts = widget.favoriteProducts;
                 break;
               case 'Latest':
-                // Assuming products have an ID or timestamp, sort by newest first
                 filteredProducts = List.from(widget.favoriteProducts)
                   ..sort((a, b) => b.productId.compareTo(a.productId));
+                if (filteredProducts.length > 10) {
+                  filteredProducts = filteredProducts.take(10).toList();
+                }
                 break;
               case 'Cheapest':
                 filteredProducts = List.from(widget.favoriteProducts)
