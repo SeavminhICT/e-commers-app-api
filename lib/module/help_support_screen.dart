@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart';
+import 'langauge_data.dart';
+import 'langauge_logic.dart';
 class HelpSupportScreen extends StatefulWidget {
   const HelpSupportScreen({super.key});
 
@@ -42,14 +44,15 @@ class _HelpSupportScreenState extends State<HelpSupportScreen> {
   ];
 
   @override
+
   Widget build(BuildContext context) {
+    final languageData = context.watch<LanguageLogic>().language;
     return Scaffold(
-      appBar: _buildAppBar(),
-      body: _buildBody(),
+      appBar: _buildAppBar(context, languageData),
+      body: _buildBody(context, languageData),
     );
   }
-
-  AppBar _buildAppBar() {
+  AppBar _buildAppBar(BuildContext context, Language languageData) {
     return AppBar(
       backgroundColor: Colors.white,
       elevation: 1,
@@ -60,8 +63,8 @@ class _HelpSupportScreenState extends State<HelpSupportScreen> {
           Navigator.of(context).pop();
         },
       ),
-      title: const Text(
-        'Help and Support',
+      title: Text(
+        languageData.Help_Support, // Use translated string
         style: TextStyle(
           fontWeight: FontWeight.bold,
           color: Colors.black,
@@ -76,7 +79,7 @@ class _HelpSupportScreenState extends State<HelpSupportScreen> {
     );
   }
 
-  Widget _buildBody() {
+  Widget _buildBody(BuildContext context, Language languageData) {
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
       child: Column(
@@ -86,7 +89,7 @@ class _HelpSupportScreenState extends State<HelpSupportScreen> {
             child: TextField(
               decoration: InputDecoration(
                 prefixIcon: const Icon(Icons.search),
-                hintText: 'Search language',
+                hintText: languageData.searchLanguage, // Use translated string
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -103,17 +106,22 @@ class _HelpSupportScreenState extends State<HelpSupportScreen> {
               });
             },
             children: List.generate(_faqData.length, (index) {
+              final title = index == _faqData.length - 1
+                  ? languageData.Why_cant_I_add_this_product_to_card
+                  : _faqData[index]['title']!; 
+              final body = index == _faqData.length - 1
+                  ? languageData.Have_trouble_with_adding_your_product_to_your_card
+                  : _faqData[index]['body']!; 
               return ExpansionPanel(
                 canTapOnHeader: true,
                 headerBuilder: (context, isExpanded) {
                   return ListTile(
-                    title: Text(_faqData[index]['title']!),
+                    title: Text(title),
                   );
                 },
                 body: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  child: Text(
-                    _faqData[index]['body']!,
+                  child: Text(body,
                     style: const TextStyle(color: Colors.grey),
                   ),
                 ),

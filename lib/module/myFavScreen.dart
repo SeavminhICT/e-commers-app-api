@@ -1,8 +1,9 @@
 import 'package:e_commers_app/constant/constants.dart';
 import 'package:e_commers_app/module/fav_noti_screen.dart';
+import 'package:e_commers_app/module/langauge_logic.dart';
 import 'package:e_commers_app/module/model/products_detail_model.dart';
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart';
 enum SortOption {
   priceHighToLow,
   priceLowToHigh,
@@ -92,6 +93,7 @@ class _MyScreenState extends State<MyFavScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final languageData = context.watch<LanguageLogic>().language;
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -113,7 +115,7 @@ class _MyScreenState extends State<MyFavScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const NotificationScreen(),
+                  builder: (context) =>  NotificationScreen(),
                 ),
               );
             },

@@ -2,11 +2,14 @@ import 'package:e_commers_app/module/model/products_detail_model.dart';
 import 'package:e_commers_app/module/products_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'model/product_model.dart';
+import 'package:provider/provider.dart';
+import 'langauge_data.dart';
+import 'langauge_logic.dart';
 
 class ProductsScreen extends StatelessWidget {
   final List<Product> products;
 
-  const ProductsScreen({super.key, required this.products});
+  ProductsScreen({super.key, required this.products});
   String fixUrl(String url) {
     if (url.startsWith('https://')) {
       return url.replaceFirst('https://', 'http://');
@@ -16,13 +19,14 @@ class ProductsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final languageData = context.watch<LanguageLogic>().language;
     return Scaffold(
-      appBar: _buildAppBar(context),
-      body: _buildProductGrid(products),
+      appBar: _buildAppBar(context, languageData),
+      body: _buildProductGrid(context, products, languageData), // Pass languageData if needed for future strings
     );
   }
 
-  AppBar _buildAppBar(BuildContext context) {
+  AppBar _buildAppBar(BuildContext context, Language languageData) {
     return AppBar(
       backgroundColor: Colors.white,
       elevation: 1,
@@ -31,9 +35,9 @@ class ProductsScreen extends StatelessWidget {
         icon: const Icon(Icons.arrow_back, color: Colors.blue),
         onPressed: () => Navigator.pop(context),
       ),
-      title: const Text(
-        'Products',
-        style: TextStyle(
+      title: Text(
+        languageData.Products, // Use translated string
+        style: const TextStyle(
           fontWeight: FontWeight.bold,
           color: Colors.blue,
         ),
@@ -41,7 +45,7 @@ class ProductsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildProductGrid(List<Product> products) {
+  Widget _buildProductGrid(BuildContext context, List<Product> products, Language languageData) {
     return Padding(
       padding: const EdgeInsets.all(8),
       child: GridView.builder(
@@ -65,13 +69,13 @@ class ProductsScreen extends StatelessWidget {
                   ),
                 );
               },
-              child: _buildProductCard(products[index]));
+              child: _buildProductCard(context, products[index], languageData)); // Pass languageData
         },
       ),
     );
   }
 
-  Widget _buildProductCard(Product product) {
+  Widget _buildProductCard(BuildContext context, Product product, Language languageData) {
     final String imageUrl = fixUrl(product.image);
     print("Image URL: $imageUrl");
     return Container(

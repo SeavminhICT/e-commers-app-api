@@ -1,36 +1,28 @@
-import 'package:e_commers_app/module/langauge_data.dart';
 import 'package:flutter/material.dart';
+import 'langauge_data.dart';
 
 class LanguageLogic extends ChangeNotifier {
-  Language _language = Khmer();
-  Language get language => _language;
+  final List<Language> _supportedLanguages = [
+    Language(), 
+    English(), 
+  ];
+
+
   int _langIndex = 0;
+  late Language _language;
+
+  LanguageLogic() {
+    _language = _supportedLanguages[_langIndex];
+  }
+
   int get langIndex => _langIndex;
+  Language get language => _language;
 
-  void changeToEnglish() {
-    _langIndex = 0;
-    _language = languageList[_langIndex];
-    notifyListeners();
-  }
-
-  void changeToKhmer() {
-    _langIndex = 1;
-    _language = languageList[_langIndex];
-    notifyListeners();
-  }
-
-  void changeToChinese() {
-    _langIndex = 2;
-    _language = languageList[_langIndex];
-    notifyListeners();
+  void changeLang(int index) {
+    if (index >= 0 && index < _supportedLanguages.length) {
+      _langIndex = index;
+      _language = _supportedLanguages[index];
+      notifyListeners();
+    }
   }
 }
-
-    // Language _language = Khmer();
-    // int _langIndex = 0;
-    // put under class
-
-
-    // _language = context.watch<LanguageLogic>().language;
-    // _langIndex = context.watch<LanguageLogic>().langIndex;
-    // put under package
