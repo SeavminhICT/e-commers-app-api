@@ -111,8 +111,8 @@ class _MyFavScreenState extends State<MyFavScreen> {
     return Scaffold(
       appBar: AppBar(
 
-        title: const Text(
-          'My Favorite',
+        title: Text(
+          languageData.My_Favorite,
           style: TextStyle(
             color: Colors.black,
             fontSize: 18,
@@ -209,7 +209,7 @@ class _MyFavScreenState extends State<MyFavScreen> {
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
-                hintText: 'Search something...',
+                hintText: languageData.Search_something,
                 hintStyle: TextStyle(color: Colors.grey),
                 border: InputBorder.none,
               ),
@@ -252,7 +252,7 @@ class _MyFavScreenState extends State<MyFavScreen> {
                           : Colors.grey,
                     ),
                     const SizedBox(width: 8),
-                    const Text('Price: High to Low'),
+                    Text(languageData.Price_High),
                   ],
                 ),
               ),
@@ -267,7 +267,7 @@ class _MyFavScreenState extends State<MyFavScreen> {
                           : Colors.grey,
                     ),
                     const SizedBox(width: 8),
-                    const Text('Price: Low to High'),
+                     Text(languageData.Price_Low),
                   ],
                 ),
               ),
@@ -282,7 +282,7 @@ class _MyFavScreenState extends State<MyFavScreen> {
                           : Colors.grey,
                     ),
                     const SizedBox(width: 8),
-                    const Text('Name: A to Z'),
+                     Text(languageData.Name_AtoZ),
                   ],
                 ),
               ),
@@ -297,7 +297,7 @@ class _MyFavScreenState extends State<MyFavScreen> {
                           : Colors.grey,
                     ),
                     const SizedBox(width: 8),
-                    const Text('Name: Z to A'),
+                     Text(languageData.Name_ZtoA),
                   ],
                 ),
               ),
@@ -372,7 +372,8 @@ class _MyFavScreenState extends State<MyFavScreen> {
     }
 
     if (filteredProducts.isEmpty) {
-      return const Center(child: Text("No products found"));
+      final languageData = context.watch<LanguageLogic>().language;
+      return Center(child: Text(languageData.No_products_found));
     }
 
     return GridView.builder(

@@ -21,12 +21,9 @@ class SettingsScreen extends StatelessWidget {
       body: _buildBody(context),
     );
   }
-    Language _language = Language();
-  int _langIndex = 0;
 
   AppBar _buildAppBar(BuildContext context) {
-    _language = context.watch<LanguageLogic>().language;
-    _langIndex = context.watch<LanguageLogic>().langIndex;
+    final language = context.watch<LanguageLogic>().language;
     return AppBar(
       backgroundColor: Colors.white,
       elevation: 1,
@@ -38,7 +35,7 @@ class SettingsScreen extends StatelessWidget {
         },
       ),
       title: Text(
-        _language.Settings, // Use translated string
+        language.Settings, // Use translated string
         style: const TextStyle(
           fontWeight: FontWeight.bold,
           color: Colors.black,
@@ -54,13 +51,13 @@ class SettingsScreen extends StatelessWidget {
   }
 
   Widget _buildBody(BuildContext context) {
-    _language = context.watch<LanguageLogic>().language;
-    _langIndex = context.watch<LanguageLogic>().langIndex;
+    final language = context.watch<LanguageLogic>().language;
+    final langIndex = context.watch<LanguageLogic>().langIndex;
     return ListView(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
       children: [
         Text(
-          _language.General, // Use translated string
+          language.General, // Use translated string
           style: const TextStyle(
             fontWeight: FontWeight.w700,
             fontSize: 18,
@@ -70,7 +67,7 @@ class SettingsScreen extends StatelessWidget {
         _buildListItem(
           context,
           icon: Icons.person_outline,
-          label: _language.Edit_Profile, // Use translated string
+          label: language.Edit_Profile, // Use translated string
           onTap: () {
             Navigator.of(context).push(
               MaterialPageRoute(builder: (context) => const EditProfileScreen()),
@@ -80,7 +77,7 @@ class SettingsScreen extends StatelessWidget {
         _buildListItem( // Use translated string
           context,
           icon: Icons.lock_outline,
-          label: _language.Change_Password,
+          label: language.Change_Password,
           onTap: () {
             Navigator.of(context).push(
               MaterialPageRoute(builder: (context) => const ChangePasswordScreen()),
@@ -90,7 +87,7 @@ class SettingsScreen extends StatelessWidget {
         _buildListItem( // Use translated string
           context,
           icon: Icons.notifications_outlined,
-          label: _language.Notifications,
+          label: language.Notifications,
           onTap: () {
             Navigator.of(context).push(
               MaterialPageRoute(builder: (context) => const NotificationsScreen()),
@@ -100,7 +97,7 @@ class SettingsScreen extends StatelessWidget {
         _buildListItem( // Use translated string
           context,
           icon: Icons.security_outlined,
-          label: _language.Security, // Use translated string
+          label: language.Security, // Use translated string
           onTap: () {
             Navigator.of(context).push(
               MaterialPageRoute(builder: (context) => const SecurityScreen()),
@@ -110,9 +107,9 @@ class SettingsScreen extends StatelessWidget {
         _buildListItem(
           context,
           icon: Icons.language_outlined,
-          label: _language.Language_Label, // Use translated string
+          label: language.Language_Label, // Use translated string
           trailing: Text(
-            _langIndex == 0 ? 'ខ្មែរ' : 'English',
+            langIndex == 0 ? 'ខ្មែរ' : 'English',
             style: const TextStyle(color: Colors.grey),
           ),
           onTap: () {
@@ -123,7 +120,7 @@ class SettingsScreen extends StatelessWidget {
         ),
         const SizedBox(height: 24),
         Text(
-          _language.Preferences, // Use translated string
+          language.Preferences, // Use translated string
           style: const TextStyle(
             fontWeight: FontWeight.w700,
             fontSize: 18,
@@ -133,7 +130,7 @@ class SettingsScreen extends StatelessWidget {
         _buildListItem(
           context,
           icon: Icons.shield_outlined,
-          label: _language.Legal_and_Policies, // Use translated string
+          label: language.Legal_and_Policies, // Use translated string
           onTap: () {
             Navigator.of(context).push(
               MaterialPageRoute(builder: (context) =>  LegalPoliciesScreen()),
@@ -143,7 +140,7 @@ class SettingsScreen extends StatelessWidget {
         _buildListItem( // Use translated string
           context,
           icon: Icons.help_outline,
-          label: _language.Help_and_Support, // Use translated string
+          label: language.Help_and_Support, // Use translated string
           onTap: () {
             Navigator.of(context).push(
               MaterialPageRoute(builder: (context) => const HelpSupportScreen()),
@@ -181,10 +178,8 @@ class SettingsScreen extends StatelessWidget {
       ),
     );
   }
-
-        _buildLogoutButton(BuildContext context) {
-    _language = context.watch<LanguageLogic>().language;
-    _langIndex = context.watch<LanguageLogic>().langIndex;
+  Widget _buildLogoutButton(BuildContext context) {
+    final language = context.watch<LanguageLogic>().language;
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -194,7 +189,7 @@ class SettingsScreen extends StatelessWidget {
       child: ListTile(
         leading: const Icon(Icons.logout, color: Colors.red),
         title: Text(
-          _language.Logout, // Use translated string
+          language.Logout, // Use translated string
           style: const TextStyle(color: Colors.red),
         ),
         onTap: () {

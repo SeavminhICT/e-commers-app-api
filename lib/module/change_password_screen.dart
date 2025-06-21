@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'langauge_data.dart';
 import 'langauge_logic.dart';
+import 'package:e_commers_app/service/storage_service.dart';
+import 'api_service/api_service.dart'; // Import ApiService
 class ChangePasswordScreen extends StatefulWidget {
   const ChangePasswordScreen({super.key});
 
@@ -10,11 +12,24 @@ class ChangePasswordScreen extends StatefulWidget {
 }
 
 class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
+  bool _isLoading = false;
+  bool _obscureCurrentPassword = true;
   bool _obscureNewPassword = true;
   bool _obscureConfirmPassword = true;
 
+  final TextEditingController _currentPasswordController = TextEditingController();
   final TextEditingController _newPasswordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _currentPasswordController.dispose();
+    _newPasswordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -59,33 +74,50 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   Widget _buildBody() {
     _language = context.watch<LanguageLogic>().language;
     _langIndex = context.watch<LanguageLogic>().langIndex;
-    return ListView(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-      children: [
-        _buildSectionTitle(_language.New_Password), // Use translated string
-        _buildPasswordField(
-          controller: _newPasswordController,
-          obscureText: _obscureNewPassword,
-          onToggle: () {
-            setState(() {
-              _obscureNewPassword = !_obscureNewPassword;
-            });
-          },
-          hintText: _language.Enter_new_password, // Use translated string
-        ),
-        const SizedBox(height: 24),
-        _buildSectionTitle(_language.Confirm_Password), // Use translated string
-        _buildPasswordField(
-          controller: _confirmPasswordController,
-          obscureText: _obscureConfirmPassword,
-          onToggle: () {
-            setState(() {
-              _obscureConfirmPassword = !_obscureConfirmPassword;
-            });
-          },
-          hintText: _language.Confirm_your_new_password, // Use translated string
-        ),
-      ],
+    return RefreshIndicator(
+      onRefresh: () async {
+        await Future.value();
+      },
+      child: ListView(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+        children: [
+          _buildSectionTitle(_language.Current_Password), // Use translated string
+          _buildPasswordField(
+            controller: _currentPasswordController,
+            obscureText: _obscureCurrentPassword,
+            onToggle: () {
+              setState(() {
+                _obscureCurrentPassword = !_obscureCurrentPassword;
+              });
+            },
+            hintText: _language.Enter_current_password, // Use translated string
+          ),
+          const SizedBox(height: 24),
+          _buildSectionTitle(_language.New_Password), // Use translated string
+          _buildPasswordField(
+            controller: _newPasswordController,
+            obscureText: _obscureNewPassword,
+            onToggle: () {
+              setState(() {
+                _obscureNewPassword = !_obscureNewPassword;
+              });
+            },
+            hintText: _language.Enter_new_password, // Use translated string
+          ),
+          const SizedBox(height: 24),
+          _buildSectionTitle(_language.Confirm_Password), // Use translated string
+          _buildPasswordField(
+            controller: _confirmPasswordController,
+            obscureText: _obscureConfirmPassword,
+            onToggle: () {
+              setState(() {
+                _obscureConfirmPassword = !_obscureConfirmPassword;
+              });
+            },
+            hintText: _language.Confirm_your_new_password, // Use translated string
+          ),
+        ],
+      ),
     );
   }
 
@@ -131,25 +163,100 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     );
   }
 
+  Future<void> _performPasswordChange() async {
+    if (!mounted) return;
+    final languageData = context.read<LanguageLogic>().language;
+
+    final currentPassword = _currentPasswordController.text;
+    final newPassword = _newPasswordController.text;
+    final confirmPassword = _confirmPasswordController.text;
+
+    if (currentPassword.isEmpty || newPassword.isEmpty || confirmPassword.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(languageData.Please_fill_in_all_fields)), // Add this key to language_data.dart
+      );
+      return;
+    }
+
+    if (newPassword.length < 6) {
+       ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Password must be at least 6 characters")), // Or add Password_too_short to language_data.dart
+      );
+      return;
+    }
+
+    if (newPassword != confirmPassword) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Passwords do not match")), // Or add Passwords_do_not_match to language_data.dart
+      );
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    try {
+      final token = await StorageService.read(key: 'token');
+      if (token == null) {
+        throw Exception('Authentication token not found.');
+      }
+
+      await ApiService().changePassword(
+        token: token,
+        currentPassword: currentPassword,
+        newPassword: newPassword,
+        newPasswordConfirmation: confirmPassword,
+      );
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(languageData.Password_Changed_Successfully)),
+        );
+        Navigator.of(context).pop(); // Go back after successful change
+      }
+    } catch (e) {
+      debugPrint('Failed to change password: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('${languageData.Error_Changing_Password}: ${e.toString()}')),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
   Widget _buildChangeButton() {
     _language = context.watch<LanguageLogic>().language;
     _langIndex = context.watch<LanguageLogic>().langIndex;
     return Container(
       padding: const EdgeInsets.all(16),
       child: ElevatedButton(
-        onPressed: () {
-        },
+        onPressed: _isLoading ? null : _performPasswordChange,
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.deepPurple,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(24),
           ),
           minimumSize: const Size.fromHeight(48),
+          disabledBackgroundColor: Colors.deepPurple.withOpacity(0.5),
         ),
-        child: Text(
-          _language.Change_Now, // Use translated string
-          style: const TextStyle(fontSize: 16),
-        ),
+        child: _isLoading
+            ? const SizedBox(
+                height: 24,
+                width: 24,
+                child: CircularProgressIndicator(
+                  color: Colors.white,
+                  strokeWidth: 2,
+                ),
+              )
+            : Text(
+                _language.Change_Now, // Use translated string
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.white,
+                ),
+                textAlign: TextAlign.center,
+              ),
       ),
     );
   }
