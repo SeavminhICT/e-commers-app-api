@@ -63,7 +63,7 @@ class _MainScreenState extends State<MainScreen> {
         HomeScreen(),
         MyOrderScreen(),
         MyFavScreen(favoriteProducts: favoriteProducts),
-        EditProfileScreen(),
+        AccountScreen(),
       ],
     );
   }
