@@ -10,16 +10,14 @@ enum SortOption {
   nameAZ,
   nameZA,
 }
-enum FilterType {
-  all,
-  latest,
-  cheapest,
-  expensive
-}
+
+enum FilterType { all, latest, cheapest, expensive }
+
 class MyFavScreen extends StatefulWidget {
   final List<ProductsDetailModel> favoriteProducts;
 
-  const MyFavScreen({Key? key, required this.favoriteProducts}) : super(key: key);
+  const MyFavScreen({Key? key, required this.favoriteProducts})
+      : super(key: key);
 
   @override
   State<MyFavScreen> createState() => _MyScreenState();
@@ -30,14 +28,14 @@ class _MyScreenState extends State<MyFavScreen> {
   final TextEditingController searchController = TextEditingController();
   FilterType selectedFilterType = FilterType.all;
   String selectedFilter = 'All';
-@override
-void initState() {
-  super.initState();
-  filteredProducts = widget.favoriteProducts;
-  searchController.addListener(() {
-    filterProducts(searchController.text);
-  });
-}
+  @override
+  void initState() {
+    super.initState();
+    filteredProducts = widget.favoriteProducts;
+    searchController.addListener(() {
+      filterProducts(searchController.text);
+    });
+  }
 
   @override
   void dispose() {
@@ -51,39 +49,48 @@ void initState() {
     }
     return url;
   }
-void filterProducts(String query) {
-  setState(() {
-    if (query.isEmpty) {
-      filteredProducts = widget.favoriteProducts;
-    } else {
-      filteredProducts = widget.favoriteProducts
-          .where((product) =>
-              product.productName.toLowerCase().contains(query.toLowerCase()) ||
-              product.productDescription.toLowerCase().contains(query.toLowerCase()))
-          .toList();
-    }
-  });
-}
 
-void sortProducts(SortOption option) {
-  setState(() {
-    switch (option) {
-      
-      case SortOption.nameAZ:
-        filteredProducts.sort((a, b) => a.productName.compareTo(b.productName));
-        break;
-      case SortOption.nameZA:
-        filteredProducts.sort((a, b) => b.productName.compareTo(a.productName));
-        break;
+  void filterProducts(String query) {
+    setState(() {
+      if (query.isEmpty) {
+        filteredProducts = widget.favoriteProducts;
+      } else {
+        filteredProducts = widget.favoriteProducts
+            .where((product) =>
+                product.productName
+                    .toLowerCase()
+                    .contains(query.toLowerCase()) ||
+                product.productDescription
+                    .toLowerCase()
+                    .contains(query.toLowerCase()))
+            .toList();
+      }
+    });
+  }
+
+  void sortProducts(SortOption option) {
+    setState(() {
+      switch (option) {
+        case SortOption.nameAZ:
+          filteredProducts
+              .sort((a, b) => a.productName.compareTo(b.productName));
+          break;
+        case SortOption.nameZA:
+          filteredProducts
+              .sort((a, b) => b.productName.compareTo(a.productName));
+          break;
         case SortOption.priceHighToLow:
-        filteredProducts.sort((a, b) => b.productPrice.compareTo(a.productPrice));
-        break;
-      case SortOption.priceLowToHigh:
-        filteredProducts.sort((a, b) => a.productPrice.compareTo(b.productPrice));
-        break;
-    }
-  });
-}
+          filteredProducts
+              .sort((a, b) => b.productPrice.compareTo(a.productPrice));
+          break;
+        case SortOption.priceLowToHigh:
+          filteredProducts
+              .sort((a, b) => a.productPrice.compareTo(b.productPrice));
+          break;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final languageData = context.watch<LanguageLogic>().language;
@@ -144,37 +151,38 @@ void sortProducts(SortOption option) {
                 ],
               ),
               child: TextField(
-              controller: searchController,
-              onChanged: filterProducts, // Add this line
-              decoration: InputDecoration(
-                hintText: 'Search your favotite...',
-                border: InputBorder.none,
-                icon: const Icon(Icons.search),
-                suffixIcon: PopupMenuButton<SortOption>(
-                icon: const Icon(Icons.tune),
-                onSelected: sortProducts,
-                itemBuilder: (BuildContext context) => <PopupMenuEntry<SortOption>>[
-                   const PopupMenuItem<SortOption>(
-                    value: SortOption.nameAZ,
-                    child: Text('Name: A to Z'),
+                controller: searchController,
+                onChanged: filterProducts, // Add this line
+                decoration: InputDecoration(
+                  hintText: 'Search your favotite...',
+                  border: InputBorder.none,
+                  icon: const Icon(Icons.search),
+                  suffixIcon: PopupMenuButton<SortOption>(
+                    icon: const Icon(Icons.tune),
+                    onSelected: sortProducts,
+                    itemBuilder: (BuildContext context) =>
+                        <PopupMenuEntry<SortOption>>[
+                      const PopupMenuItem<SortOption>(
+                        value: SortOption.nameAZ,
+                        child: Text('Name: A to Z'),
+                      ),
+                      const PopupMenuItem<SortOption>(
+                        value: SortOption.nameZA,
+                        child: Text('Name: Z to A'),
+                      ),
+                      const PopupMenuItem<SortOption>(
+                        value: SortOption.priceHighToLow,
+                        child: Text('Price: High to Low'),
+                      ),
+                      const PopupMenuItem<SortOption>(
+                        value: SortOption.priceLowToHigh,
+                        child: Text('Price: Low to High'),
+                      ),
+                    ],
                   ),
-                  const PopupMenuItem<SortOption>(
-                    value: SortOption.nameZA,
-                    child: Text('Name: Z to A'),
-                  ),
-                  const PopupMenuItem<SortOption>(
-                    value: SortOption.priceHighToLow,
-                    child: Text('Price: High to Low'),
-                  ),
-                  const PopupMenuItem<SortOption>(
-                    value: SortOption.priceLowToHigh,
-                    child: Text('Price: Low to High'),
-                  ),
-                ],
                 ),
               ),
             ),
-                        ),
           ),
           SizedBox(
             height: 50,
@@ -211,55 +219,52 @@ void sortProducts(SortOption option) {
     );
   }
 
- Widget _buildFilter(String label) {
-  bool isSelected = selectedFilter == label;
-  return Container(
-    margin: const EdgeInsets.only(right: 6),
-    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-    child: ChoiceChip(
-      label: Text(
-        label,
-        style: TextStyle(
-          color: isSelected ? Colors.white : Colors.grey[600],
+  Widget _buildFilter(String label) {
+    bool isSelected = selectedFilter == label;
+    return Container(
+      margin: const EdgeInsets.only(right: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+      child: ChoiceChip(
+        label: Text(
+          label,
+          style: TextStyle(
+            color: isSelected ? Colors.white : Colors.grey[600],
+          ),
+        ),
+        selected: isSelected,
+        onSelected: (bool selected) {
+          if (selected) {
+            setState(() {
+              selectedFilter = label;
+              switch (label) {
+                case 'All':
+                  filteredProducts = widget.favoriteProducts;
+                  break;
+                case 'Latest':
+                  filteredProducts = List.from(widget.favoriteProducts)
+                    ..sort((a, b) => b.productId.compareTo(a.productId));
+                  break;
+                case 'Cheapest':
+                  filteredProducts = List.from(widget.favoriteProducts)
+                    ..sort((a, b) => a.productPrice.compareTo(b.productPrice));
+                  break;
+                case 'Expensive':
+                  filteredProducts = List.from(widget.favoriteProducts)
+                    ..sort((a, b) => b.productPrice.compareTo(a.productPrice));
+                  break;
+              }
+            });
+          }
+        },
+        backgroundColor: Colors.white,
+        selectedColor: Colors.blue,
+        showCheckmark: false,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
         ),
       ),
-      selected: isSelected,
-      onSelected: (bool selected) {
-        if (selected) {
-          setState(() {
-            selectedFilter = label;
-            switch (label) {
-              case 'All':
-                filteredProducts = widget.favoriteProducts;
-                break;
-              case 'Latest':
-                filteredProducts = List.from(widget.favoriteProducts)
-                  ..sort((a, b) => b.productId.compareTo(a.productId));
-                if (filteredProducts.length > 10) {
-                  filteredProducts = filteredProducts.take(10).toList();
-                }
-                break;
-              case 'Cheapest':
-                filteredProducts = List.from(widget.favoriteProducts)
-                  ..sort((a, b) => a.productPrice.compareTo(b.productPrice));
-                break;
-              case 'Expensive':
-                filteredProducts = List.from(widget.favoriteProducts)
-                  ..sort((a, b) => b.productPrice.compareTo(a.productPrice));
-                break;
-            }
-          });
-        }
-      },
-      backgroundColor: Colors.white,
-      selectedColor: Colors.blue,
-      showCheckmark: false,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
-    ),
-  );
-}
+    );
+  }
 
   Widget _buildProductCard(ProductsDetailModel product) {
     return Container(
@@ -293,7 +298,6 @@ void sortProducts(SortOption option) {
                       child: Image.network(
                         fixUrl(product.productImageUrl),
                         fit: BoxFit.contain,
-                        
                       ),
                     ),
                   ),
