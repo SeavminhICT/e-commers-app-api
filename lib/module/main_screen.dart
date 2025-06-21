@@ -64,7 +64,7 @@ class _MainScreenState extends State<MainScreen> {
       children: [
         const HomeScreen(),
         const MyOrderScreen(),
-        MyScreen(favoriteProducts: favoriteProducts), // Pass the global favoriteProducts list
+        MyFavScreen(favoriteProducts: favoriteProducts), // Pass the global favoriteProducts list
         const AccountScreen(),
       ],
     );

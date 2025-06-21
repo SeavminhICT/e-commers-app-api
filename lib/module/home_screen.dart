@@ -1,3 +1,4 @@
+import 'package:e_commers_app/module/fav_noti_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_commers_app/module/model/products_detail_model.dart';
 import 'package:e_commers_app/module/products_screen.dart';
@@ -148,7 +149,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: 20,
                 width: 20,
               ),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => NotificationScreen()),
+                );
+              },
             ),
             IconButton(
               icon: Image.asset(
@@ -372,7 +378,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             borderRadius: BorderRadius.circular(16),
                             child: Image.network(
                               imageUrl,
-                              fit: BoxFit.cover,
+                              width: 20,
+                              height: 20,
+                              fit: BoxFit.contain,
                               loadingBuilder:
                                   (context, child, loadingProgress) {
                                 if (loadingProgress == null) return child;
@@ -434,7 +442,8 @@ class _HomeScreenState extends State<HomeScreen> {
     if (products.isEmpty) {
       return const Center(child: Text('No products found.'));
     }
-    final displayProducts = products.take(2).toList();
+    // Limit to the first 2 products for the "Featured Product" section
+    final displayProducts = products.take(6).toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -580,7 +589,8 @@ class _HomeScreenState extends State<HomeScreen> {
     final lowPriceProducts = List<Product>.from(products)
       ..sort((a, b) => double.parse(a.price).compareTo(double.parse(b.price)));
 
-    final displayProducts = lowPriceProducts.take(2).toList();
+    // Limit to the first 2 products for the "Best Sellers" section
+    final displayProducts = lowPriceProducts.take(4).toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -731,7 +741,8 @@ class _HomeScreenState extends State<HomeScreen> {
     final topRatedProducts = List<Product>.from(products)
       ..sort((a, b) => b.rating.compareTo(a.rating));
 
-    final displayProducts = topRatedProducts.take(2).toList();
+    // Limit to the first 2 products for the "Top Rated Products" section
+    final displayProducts = topRatedProducts.take(4).toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
