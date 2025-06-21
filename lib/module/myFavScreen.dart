@@ -211,7 +211,8 @@ void sortProducts(SortOption option) {
  Widget _buildFilter(String label) {
   bool isSelected = selectedFilter == label;
   return Container(
-    margin: const EdgeInsets.only(right: 8),
+    margin: const EdgeInsets.only(right: 6),
+    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
     child: ChoiceChip(
       label: Text(
         label,
@@ -229,9 +230,11 @@ void sortProducts(SortOption option) {
                 filteredProducts = widget.favoriteProducts;
                 break;
               case 'Latest':
-                // Assuming products have an ID or timestamp, sort by newest first
                 filteredProducts = List.from(widget.favoriteProducts)
                   ..sort((a, b) => b.productId.compareTo(a.productId));
+                if (filteredProducts.length > 10) {
+                  filteredProducts = filteredProducts.take(10).toList();
+                }
                 break;
               case 'Cheapest':
                 filteredProducts = List.from(widget.favoriteProducts)
