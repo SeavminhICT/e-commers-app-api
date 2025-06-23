@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'langauge_data.dart';
+import 'langauge_logic.dart';
 
 class LegalPoliciesScreen extends StatelessWidget {
-  const LegalPoliciesScreen({super.key});
+  LegalPoliciesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final language = context.watch<LanguageLogic>().language;
     return Scaffold(
-      appBar: _buildAppBar(),
-      body: _buildBody(),
+      appBar: _buildAppBar(context, language),
+      body: _buildBody(context, language),
     );
   }
 
-  AppBar _buildAppBar() {
+  AppBar _buildAppBar(BuildContext context, Language language) {
     return AppBar(
       backgroundColor: Colors.white,
       elevation: 1,
@@ -24,8 +28,8 @@ class LegalPoliciesScreen extends StatelessWidget {
           },
         ),
       ),
-      title: const Text(
-        'Legal and Policies',
+      title: Text(
+        language.Legal_and_Policies, // Use translated string
         style: TextStyle(
           fontWeight: FontWeight.bold,
           color: Colors.black,
@@ -40,42 +44,42 @@ class LegalPoliciesScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildBody() {
+  Widget _buildBody(BuildContext context, Language language) {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
-            Text(
-              'Terms',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-            ),
-            SizedBox(height: 8),
-            Text(
-              'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Eget ornare quam vel facilisis feugiat amet sagittis arcu, tortor. Sapien, consequat ultrices morbi orci semper sit nulla. Leo auctor ut etiam est, amet aliquet ut vivamus. Odio vulputate est id tincidunt fames.',
-              style: TextStyle(color: Colors.grey),
-            ),
-            SizedBox(height: 8),
-            Text(
-              'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Eget ornare quam vel facilisis feugiat amet sagittis arcu, tortor. Sapien, consequat ultrices morbi orci semper sit nulla. Leo auctor ut etiam est, amet aliquet ut vivamus. Odio vulputate est id tincidunt fames.',
-              style: TextStyle(color: Colors.grey),
-            ),
-            SizedBox(height: 16),
-            Text(
-              'Changes to the Service and/or Terms:',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-            ),
-            SizedBox(height: 8),
-            Text(
-              'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Eget ornare quam vel facilisis feugiat amet sagittis arcu, tortor. Sapien, consequat ultrices morbi orci semper sit nulla. Leo auctor ut etiam est, amet aliquet ut vivamus. Odio vulputate est id tincidunt fames.',
-              style: TextStyle(color: Colors.grey),
-            ),
-            SizedBox(height: 8),
-            Text(
-              'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Eget ornare quam vel facilisis feugiat amet sagittis arcu, tortor. Sapien, consequat ultrices morbi orci semper sit nulla. Leo auctor ut etiam est, amet aliquet ut vivamus. Odio vulputate est id tincidunt fames.',
-              style: TextStyle(color: Colors.grey),
-            ),
+          children: [
+         Text(
+          language.Terms,
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+        ),
+        const SizedBox(height: 8),
+         Text(
+          language.Welcome_to_our_app,
+          style: const TextStyle(color: Colors.grey),
+        ),
+        const SizedBox(height: 8),
+         Text(
+          language.Your_use_of_any,
+          style: const TextStyle(color: Colors.grey),
+        ),
+        const SizedBox(height: 16),
+         Text(
+          language.Changes_to_the,
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          language.We_reserve_the_right_to_modify,
+          style: const TextStyle(color: Colors.grey),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          language.If_you_do_not_agree,
+          style: const TextStyle(color: Colors.grey),
+        ),
           ],
         ),
       ),

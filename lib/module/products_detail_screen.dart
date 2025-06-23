@@ -4,6 +4,9 @@ import 'package:e_commers_app/module/myFavScreen.dart';
 import 'package:e_commers_app/service/favorite_service.dart';
 import 'package:e_commers_app/service/storage_service.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'langauge_data.dart';
+import 'langauge_logic.dart';
 
 class ProductsDetailScreen extends StatefulWidget {
   final ProductsDetailModel product;
@@ -36,13 +39,17 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
       (item) => item.productId == widget.product.productId,
     );
   }
+    Language _language = Language();
+  int _langIndex = 0;
 
   Widget build(BuildContext context) {
+    _language = context.watch<LanguageLogic>().language;
+    _langIndex = context.watch<LanguageLogic>().langIndex;
     final product = widget.product;
     final imageUrl = fixUrl(product.productImageUrl);
 
     if (imageUrl.isEmpty) {
-      return Scaffold(
+      return const Scaffold(
         body: Center(child: Text('Image URL is empty')),
       );
     }
@@ -145,7 +152,7 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
                       ],
                     ),
                     const SizedBox(height: 16),
-                    const Text("Size",
+                    Text(_language.Size,
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 16)),
                     Wrap(
@@ -168,7 +175,7 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
                       }).toList(),
                     ),
                     const SizedBox(height: 12),
-                    const Text("Description",
+                    Text(_language.Description,
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 16)),
                     const SizedBox(height: 8),
@@ -200,8 +207,8 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
                           borderRadius: BorderRadius.circular(16),
                         ),
                       ),
-                      child: const Text(
-                        'Buy Now',
+                      child: Text(
+                        _language.Buy_Now,
                         style: TextStyle(fontSize: 16, color: Colors.white),
                       ),
                     ),
@@ -215,9 +222,10 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
 
                         if (token == null) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text('You must login to add to cart')),
+                            SnackBar(
+                                content: Text(_language.You_must)),
                           );
+
                           return;
                         }
                         final success = await ApiService.addToCart(
@@ -230,11 +238,9 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
 
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text(
-                              success
-                                  ? 'Product added to cart'
-                                  : 'Failed to add to cart',
-                            ),
+                            content: Text(success
+                                  ? _language.Add_to
+                                  : _language.Failed_to),
                           ),
                         );
                       },
@@ -245,8 +251,8 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
                           borderRadius: BorderRadius.circular(16),
                         ),
                       ),
-                      child: const Text(
-                        'Add to Cart',
+                      child: Text(
+                        _language.Add_to,
                         style: TextStyle(fontSize: 16, color: Colors.white),
                       ),
                     ),
